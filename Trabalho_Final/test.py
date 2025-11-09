@@ -1,13 +1,23 @@
 import json
 import pulp
 import pandas as pd
+import preprocessamento
 
+# ==============================
+# 1. Leitura E PRÉ-PROCESSAMENTO
+# ==============================
+
+data = preprocessamento.carregar_dados("input_semanal.json")
+
+if data is None:
+    print("Erro fatal: Falha ao carregar ou processar os dados. Encerrando.")
+    exit()
 
 # ==============================
 # 1. Leitura do arquivo JSON
 # ==============================
-with open("input.json", "r") as f:
-    data = json.load(f)
+#with open("input.json", "r") as f:
+    #data = json.load(f)
 
 # Renomeando as variáveis de conjuntos/índices para corresponderem ao LaTeX
 Pessoas = data["people"] # i
@@ -19,12 +29,13 @@ Duration_per_slot = data["slot_duration_min"]
 # Assume que o input.json tem "type": "bebe" nas tarefas relevantes
 Tarefas_Bebe = [j for j, task_data in data["tasks"].items() if task_data.get("type") == "bebe"]
 # Tarefas_Casa não é necessária para as restrições, pois D (Tarefas) já é usado na Restrição 4.2
-
+print(Tarefas_Bebe)
 
 # Parâmetros
 D = {j: data["tasks"][j]["duration"]//Duration_per_slot for j in Tarefas} # d_j (duração)
 O = {j: range(data["tasks"][j]["occurrences"]) for j in Tarefas} # o (ocorrências)
-A = {i: data["availability"][i] for i in Pessoas} # A_i,t (disponibilidade)
+#A = {i: data["availability"][i] for i in Pessoas} # A_i,t (disponibilidade)
+A = data["availability_binaria"]
 C = data["capacity"] # c_i,j (capacidade/aptidão)
 Dependencies = data.get("dependencies", {})
 
@@ -100,7 +111,7 @@ for i in Pessoas:
         )
 
 
-### --- CORRIGIDO: 4.3 Restrição Global (Apenas Tarefas do Bebê) --- ###
+### --- 4.3 Restrição Global (Apenas Tarefas do Bebê) --- ###
 # Conforme Restrição 3 do LaTeX, a soma é apenas para j in D_B
 for t in range(Slots):
     expr = []
@@ -225,9 +236,10 @@ if status_string == "Optimal":
 
     # Cria DataFrame
     df = pd.DataFrame(solution)
-
+    now = pd.Timestamp.now().strftime("%Y%m%d_%H%M%S")
+    file = f"solucao_cuidados_{now}.csv"
     # Salva em CSV
-    df.to_csv("solucao_cuidados.csv", index=False, encoding="utf-8")
+    df.to_csv(file, index=False, encoding="utf-8")
     print("\nSolução salva em 'solucao_cuidados.csv'.")
 else:
     print("\nNenhuma solução viável foi encontrada para exportar.")
