@@ -1,58 +1,46 @@
 {
-  "days": 7,
+  "alpha": 1000,
+  "days": 1,
   "slot_duration_min": 15,
   "people": ["mae", "pai", "avo", "tio", "tia", "babysitter"],
   "tasks": {
-    "amamentar": { "duration": 60, "occurrences": 56, "type": "bebe" },
-    "arrotar": { "duration": 30, "occurrences": 56, "type": "bebe" },
-    "trocar_fralda": { "duration": 30, "occurrences": 56, "type": "bebe" },
-    "ninar": { "duration": 30, "occurrences": 56, "type": "bebe" },
-    "banho": { "duration": 30, "occurrences": 7, "type": "bebe" },
-    "cortar_unha": { "duration": 15, "occurrences": 2, "type": "bebe" },
-    "banho_de_sol": { "duration": 15, "occurrences": 7, "type": "bebe" }, 
-    "lavar_louca": { "duration": 30, "occurrences": 14, "type": "casa" },
-    "lavar_banheiro": { "duration": 60, "occurrences": 7, "type": "casa" },
-    "tirar_lixo": { "duration": 15, "occurrences": 7, "type": "casa" },
-    "aspirar_casa": { "duration": 30, "occurrences": 7, "type": "casa" },  
-    "lavar_roupa": { "duration": 30, "occurrences": 5, "type": "casa" },
-    "passar_roupa": { "duration": 30, "occurrences": 4, "type": "casa" },
-    "estender_roupa": { "duration": 15, "occurrences": 5, "type": "casa" },
-    "preparar_cafe_manha": { "duration": 15, "occurrences": 7, "type": "casa" }, 
-    "preparar_jantar": { "duration": 30, "occurrences": 7, "type": "casa" },
-    "preparar_almoco": { "duration": 30, "occurrences": 7, "type": "casa" } 
+    "amamentar": { "duration": 60, "occurrences": 8, "type": "bebe" },
+    "arrotar": { "duration": 30, "occurrences": 8, "type": "bebe" },
+    "trocar_fralda": { "duration": 30, "occurrences": 8, "type": "bebe" },
+    "ninar": { "duration": 30, "occurrences": 8, "type": "bebe" },
+    "banho": { "duration": 30, "occurrences": 1, "type": "bebe" },
+    "cortar_unha": { "duration": 15, "occurrences": 1, "type": "bebe" },
+    "banho_de_sol": { "duration": 15, "occurrences": 1, "type": "bebe" }, 
+    "lavar_louca": { "duration": 15, "occurrences": 3, "type": "casa" },
+    "lavar_banheiro": { "duration": 30, "occurrences": 1, "type": "casa" },
+    "tirar_lixo": { "duration": 15, "occurrences": 1, "type": "casa" },
+    "aspirar_casa": { "duration": 30, "occurrences": 1, "type": "casa" },  
+    "lavar_roupa": { "duration": 15, "occurrences": 1, "type": "casa" },
+    "passar_roupa": { "duration": 30, "occurrences": 1, "type": "casa" },
+    "estender_roupa": { "duration": 15, "occurrences": 1, "type": "casa" },
+    "preparar_cafe_manha": { "duration": 15, "occurrences": 1, "type": "casa" }, 
+    "preparar_jantar": { "duration": 30, "occurrences": 1, "type": "casa" },
+    "preparar_almoco": { "duration": 30, "occurrences": 1, "type": "casa" } 
   },
   "availability": {
     "mae": [
       { "dia": "todos", "inicio": "00:00", "fim": "24:00" }
     ],
     "pai": [
-      { "dia": "seg", "inicio": "00:00", "fim": "08:00" },
-      { "dia": "seg", "inicio": "18:00", "fim": "24:00" },
-      { "dia": "ter", "inicio": "00:00", "fim": "08:00" },
-      { "dia": "ter", "inicio": "18:00", "fim": "24:00" },
-      { "dia": "qua", "inicio": "00:00", "fim": "08:00" },
-      { "dia": "qua", "inicio": "18:00", "fim": "24:00" },
-      { "dia": "qui", "inicio": "00:00", "fim": "08:00" },
-      { "dia": "qui", "inicio": "18:00", "fim": "24:00" },
-      { "dia": "sex", "inicio": "00:00", "fim": "08:00" },
-      { "dia": "sex", "inicio": "18:00", "fim": "24:00" },
-      { "dia": "sab", "inicio": "00:00", "fim": "24:00" },
-      { "dia": "dom", "inicio": "00:00", "fim": "24:00" }
+      { "dia": "todos", "inicio": "00:00", "fim": "08:00" },
+      { "dia": "todos", "inicio": "17:00", "fim": "24:00" }
     ],
     "avo": [
-      { "dia": "seg", "inicio": "03:00", "fim": "11:00" },
-      { "dia": "qua", "inicio": "03:00", "fim": "11:00" },
-      { "dia": "sex", "inicio": "03:00", "fim": "11:00" }
+      { "dia": "todos", "inicio": "07:00", "fim": "16:00"}
     ],
     "tio": [
-      { "dia": "sab", "inicio": "19:00", "fim": "23:00" }
+      { "dia": "todos", "inicio": "15:00", "fim": "21:00" }
     ],
     "tia": [
-      { "dia": "dom", "inicio": "15:00", "fim": "18:00" }
+      { "dia": "todos", "inicio": "15:00", "fim": "17:00" }
     ],
     "babysitter": [
-      { "dia": "seg", "inicio": "18:00", "fim": "24:00" },
-      { "dia": "ter", "inicio": "18:00", "fim": "24:00" }
+      { "dia": "todos", "inicio": "10:00", "fim": "15:00" }
     ]
   },
   "capacity": {
@@ -88,9 +76,8 @@
   },
   "dependencies": {
     "amamentar": {"next": "arrotar", "window": 0},
-    "preparar_cafe_manha": {"next": "lavar_louca", "window": 120},
-    "preparar_almoco": {"next": "lavar_louca", "window": 120},
-    "preparar_jantar": {"next": "lavar_louca", "window": 120},
+    "preparar_almoco": {"next": "lavar_louca", "window": 300},
+    "preparar_jantar": {"next": "lavar_louca", "window": 300},
     "lavar_roupa": {"next": "estender_roupa", "window": 60}
 
   },
@@ -101,11 +88,18 @@
     "trocar_fralda": 180
   },
   "load_limit": {
-    "mae": 6720,
-    "pai": 3000,
-    "avo": 660,
-    "tio": 600,
-    "tia": 420,
+    "mae": 1200,
+    "pai": 720,
+    "avo": 300,
+    "tio": 120,
+    "tia": 120,
     "babysitter": 300
+  },
+  "task_windows": {
+    "banho": [ { "start": "07:00", "end": "21:00" } ],
+    "banho_de_sol": [ { "start": "07:00", "end": "10:00" }, {"start": "15:00", "end": "17:00"} ],
+    "preparar_cafe_manha": [ { "start": "05:00", "end": "09:00" } ],
+    "preparar_almoco": [ { "start": "09:00", "end": "13:00" } ],
+    "preparar_jantar": [ { "start": "17:00", "end": "22:00" } ]
   }
 }

@@ -1,0 +1,81 @@
+{
+  "days": 1,
+  "slot_duration_min": 15,
+  "people": ["mae", "pai", "avo", "babysitter", "tio"],
+  
+  "tasks": {
+    "amamentar": { "duration": 60, "occurrences": 8, "type": "bebe" },
+    "arrotar": { "duration": 15, "occurrences": 8, "type": "bebe" },
+    "trocar_fralda": { "duration": 15, "occurrences": 8, "type": "bebe" },
+    "ninar": { "duration": 30, "occurrences": 8, "type": "bebe" },
+    
+    "banho_bebe": { "duration": 30, "occurrences": 1, "type": "bebe" },
+    "banho_sol": { "duration": 15, "occurrences": 1, "type": "bebe" },
+    
+    "preparar_almoco": { "duration": 30, "occurrences": 1, "type": "casa" },
+    "preparar_jantar": { "duration": 30, "occurrences": 1, "type": "casa" },
+    "lavar_louca": { "duration": 15, "occurrences": 2, "type": "casa" },
+    "limpar_casa": { "duration": 30, "occurrences": 1, "type": "casa" }
+  },
+
+  "availability": {
+    "mae": [ 
+        { "dia": "todos", "inicio": "00:00", "fim": "24:00" } 
+    ],
+    "pai": [
+        { "dia": "todos", "inicio": "00:00", "fim": "24:00" } 
+    ],
+    "avo": [
+        { "dia": "todos", "inicio": "00:00", "fim": "24:00" } 
+    ],
+    "babysitter": [
+        { "dia": "todos", "inicio": "00:00", "fim": "24:00" } 
+    ],
+    "tio": [
+        { "dia": "todos", "inicio": "00:00", "fim": "24:00" } 
+    ]
+  },
+
+  "capacity": {
+     "mae": {"amamentar": 1.0, "arrotar": 1.0, "trocar_fralda": 1.0, "ninar": 1.0, "banho_bebe": 1.0, "banho_sol": 1.0, "preparar_almoco": 0.8, "preparar_jantar": 0.8, "lavar_louca": 0.5, "limpar_casa": 0.5},
+     "pai": {"amamentar": 0.0, "arrotar": 1.0, "trocar_fralda": 1.0, "ninar": 1.0, "banho_bebe": 1.0, "banho_sol": 1.0, "preparar_almoco": 1.0, "preparar_jantar": 1.0, "lavar_louca": 1.0, "limpar_casa": 0.8},
+     "avo": {"amamentar": 0.0, "arrotar": 1.0, "trocar_fralda": 1.0, "ninar": 1.0, "banho_bebe": 1.0, "banho_sol": 1.0, "preparar_almoco": 1.0, "preparar_jantar": 0.5, "lavar_louca": 0.8, "limpar_casa": 0.8},
+     "babysitter": {"amamentar": 0.0, "arrotar": 1.0, "trocar_fralda": 1.0, "ninar": 1.0, "banho_bebe": 0.0, "banho_sol": 0.0, "preparar_almoco": 0.0, "preparar_jantar": 0.0, "lavar_louca": 0.0, "limpar_casa": 0.0},
+     "tio": {"amamentar": 0.0, "arrotar": 1.0, "trocar_fralda": 1.0, "ninar": 1.0, "banho_bebe": 1.0, "banho_sol": 1.0, "preparar_almoco": 1.0, "preparar_jantar": 1.0, "lavar_louca": 0.8, "limpar_casa": 0.8}
+    },
+
+  "dependencies": {
+    "amamentar": {"next": "arrotar", "window": 0},
+    "preparar_almoco": {"next": "lavar_louca", "window": 120}
+  },
+
+  "periodicity": {
+    "amamentar": 180,
+    "trocar_fralda": 180,
+    "ninar": 180
+  },
+
+  "load_limit": {
+    "mae": 5000,
+    "pai": 5000,
+    "avo": 5000,
+    "babysitter": 500,
+    "tio": 1000
+  },
+
+  "task_windows": {
+    "banho_bebe": [ 
+        { "start": "10:00", "end": "12:00" }, 
+        { "start": "15:00", "end": "17:00" } 
+    ],
+    "banho_sol": [
+        { "start": "08:00", "end": "10:30" }
+    ],
+    "preparar_almoco": [
+        { "start": "11:00", "end": "13:00" }
+    ],
+    "preparar_jantar": [
+        { "start": "17:00", "end": "21:00" }
+    ]
+  }
+}

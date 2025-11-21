@@ -2,12 +2,13 @@ import json
 import pulp
 import pandas as pd
 import preprocessamento
+import math
 
 # ==============================
 # 1. Leitura E PRÉ-PROCESSAMENTO
 # ==============================
 
-data = preprocessamento.carregar_dados("input_semanal.json")
+data = preprocessamento.carregar_dados("input_semanal_1dia.json")
 
 if data is None:
     print("Erro fatal: Falha ao carregar ou processar os dados. Encerrando.")
@@ -19,17 +20,19 @@ if data is None:
 #with open("input.json", "r") as f:
     #data = json.load(f)
 
-# Renomeando as variáveis de conjuntos/índices para corresponderem ao LaTeX
 Pessoas = data["people"] # i
 Tarefas = list(data["tasks"].keys()) # j (Conjunto D)
-Slots = data["slots"] # t (slots de tempo: 0 a S-1)
 Duration_per_slot = data["slot_duration_min"]
+Slots = data["days"]*24*(60//Duration_per_slot) # t (slots de tempo: 0 a S-1)
+Task_Availability = data["task_availability_binaria"]
+alpha = data.get("alpha", 0) # Valor padrão 0 se não estiver definido
 
-### --- NOVO: Identifica os subconjuntos de tarefas --- ###
+### Identifica os subconjuntos de tarefas
+#  ###
 # Assume que o input.json tem "type": "bebe" nas tarefas relevantes
 Tarefas_Bebe = [j for j, task_data in data["tasks"].items() if task_data.get("type") == "bebe"]
 # Tarefas_Casa não é necessária para as restrições, pois D (Tarefas) já é usado na Restrição 4.2
-print(Tarefas_Bebe)
+
 
 # Parâmetros
 D = {j: data["tasks"][j]["duration"]//Duration_per_slot for j in Tarefas} # d_j (duração)
@@ -37,7 +40,7 @@ O = {j: range(data["tasks"][j]["occurrences"]) for j in Tarefas} # o (ocorrênci
 #A = {i: data["availability"][i] for i in Pessoas} # A_i,t (disponibilidade)
 A = data["availability_binaria"]
 C = data["capacity"] # c_i,j (capacidade/aptidão)
-Dependencies = data.get("dependencies", {})
+Dependencies = data.get("dependencies", {}) # Dependências entre tarefas
 
 ###  Carregamento robusto do Limite de Carga (Horas -> Slots) ##
 load_limit_hours = data.get("load_limit", {})
@@ -52,6 +55,10 @@ else:
 # 2. Criação do modelo
 # ==============================
 model = pulp.LpProblem("Alocacao_Cuidados_Bebe", pulp.LpMinimize)
+
+# Variável Delta para o Balanceamento 
+# Representa a maior diferença de % de carga entre duas pessoas
+delta = pulp.LpVariable("Delta_Balanceamento", lowBound=0, cat="Continuous")
 
 # Variáveis de decisão: x[i][j][o][t] = 1 se pessoa i inicia tarefa j, ocorrência o no slot t
 x = {}
@@ -78,14 +85,18 @@ for i in Pessoas:
 # ==============================
 # 3. Função Objetivo
 # ==============================
-# Minimiza a soma ponderada pela "incapacidade" (1 - c_i,j)
-model += pulp.lpSum(
+# Termo 1: Aptidão (Minimizar "incapacidade")
+objetivo_aptidao = pulp.lpSum(
     (1 - C[i][j]) * x[i][j][o][t]
     for i in Pessoas
-    for j in Tarefas # O objetivo ainda considera TODAS as tarefas (j in D)
+    for j in Tarefas 
     for o in O[j]
     for t in range(Slots)
 )
+
+# Termo 2: Penalidade de Desequilíbrio (alpha * delta)
+# O solver vai tentar fazer o delta ser o menor possível para minimizar o custo total
+model += objetivo_aptidao + (alpha * delta)
 
 # ==============================
 # 4. Restrições
@@ -135,16 +146,27 @@ for i in Pessoas:
                 if A[i][t] == 0:
                     model += x[i][j][o][t] == 0 
 
+# 4.4b Respeitar horários das Tarefas
+# Se Task_Availability[j][t] == 0, a tarefa j não pode começar no slot t.
+for j in Tarefas:
+    # Otimização: só adiciona restrição se houver algum bloqueio para essa tarefa
+    if 0 in Task_Availability[j]: 
+        for o in O[j]:
+            for t in range(Slots):
+                if Task_Availability[j][t] == 0:
+                    for i in Pessoas:
+                        model += x[i][j][o][t] == 0
+
 # 4.5 Precedência 
 for j1_id in Dependencies: 
     j2_id = Dependencies[j1_id]["next"] 
-    W = Dependencies[j1_id]["window"] 
+    W = math.ceil(Dependencies[j1_id]["window"] / Duration_per_slot)
     
     for o in O[j1_id]: 
         for t2 in range(Slots): 
             d_j1 = D[j1_id]
             t1_min = max(0, t2 - d_j1 - W)
-            t1_max = min(t2 - d_j1, Slots - d_j1) # Versão corrigida da lógica de precedência
+            t1_max = min(t2 - d_j1, Slots - d_j1) 
             
             if t1_min > t1_max:
                 for i2 in Pessoas:
@@ -162,11 +184,12 @@ for j1_id in Dependencies:
 # 4.6 Restrição de periodicidade (tarefas recorrentes)
 if "periodicity" in data:
     for j, P_j in data["periodicity"].items(): # j in D
+        P_j_slots = math.ceil(P_j / Duration_per_slot)
         dur = D[j]
         last_start = Slots - dur
         for o in range(len(O[j]) - 1):
             for t1 in range(0, last_start + 1):
-                t2 = t1 + P_j
+                t2 = t1 + P_j_slots
                 if t2 <= last_start:
                     model += pulp.lpSum(x[i][j][o][t1] for i in Pessoas) == \
                              pulp.lpSum(x[i][j][o+1][t2] for i in Pessoas)
@@ -179,6 +202,7 @@ if Load_Limit:
         # Verifica se a pessoa 'i' tem um limite definido no dicionário
         if i in Load_Limit: 
             L_i = Load_Limit[i]
+            L_i_slots = L_i // Duration_per_slot  
             model += pulp.lpSum(
                 D[j] * x[i][j][o][t] 
                 for j in Tarefas # j in D
