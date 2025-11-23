@@ -3,258 +3,302 @@ import pulp
 import pandas as pd
 import preprocessamento
 import math
+import itertools
+import time
+
+# Script principal para montar e resolver o modelo de alocação de tarefas.
+# Este arquivo monta um modelo MILP (pulp) a partir do JSON processado
+# por `preprocessamento.carregar_dados(...)` e aplica as restrições
 
 # ==============================
-# 1. Leitura E PRÉ-PROCESSAMENTO
+# 1. Leitura e Pré-processamento
 # ==============================
 
+# Carrega e processa o JSON com funções utilitárias (converte janelas e disponibilidades
+# em vetores binários, calcula slots, etc.). O dicionário retornado contém tanto os dados
+# originais quanto as chaves auxiliares `disponibilidade_pessoas_binaria` e `disponibilidade_tarefas_binaria`.
 data = preprocessamento.carregar_dados("input_semanal_1dia.json")
 
 if data is None:
     print("Erro fatal: Falha ao carregar ou processar os dados. Encerrando.")
     exit()
 
-# ==============================
-# 1. Leitura do arquivo JSON
-# ==============================
-#with open("input.json", "r") as f:
-    #data = json.load(f)
-
-Pessoas = data["people"] # i
-Tarefas = list(data["tasks"].keys()) # j (Conjunto D)
-Duration_per_slot = data["slot_duration_min"]
-Slots = data["days"]*24*(60//Duration_per_slot) # t (slots de tempo: 0 a S-1)
-Task_Availability = data["task_availability_binaria"]
+pessoas = data["pessoas"] # conjunto de pessoas
+tarefas = list(data["tarefas"].keys()) # conjunto de tarefas
+duracao_slot = data["slot_duracao_min"]
+total_slots = data["dias"]*24*(60//duracao_slot) # número total de slots
+disponibilidade_tarefas = data.get("disponibilidade_tarefas_binaria") # TA_{j,t}
 alpha = data.get("alpha", 0) # Valor padrão 0 se não estiver definido
+tarefas_bebe = [j for j, task_data in data["tarefas"].items() if task_data.get("tipo") == "bebe"]
+duracao_tarefas = {j: data["tarefas"][j]["duracao"]//duracao_slot for j in tarefas} # d_j (duração em slots)
+ocorrencias = {j: range(data["tarefas"][j]["ocorrencias"]) for j in tarefas}
+disponibilidade_pessoas = data["disponibilidade_pessoas_binaria"]
+capacidade = data["aptidao"] # c_{i,j}
+dependencias = data.get("dependecias", {}) # dependências entre tarefas
 
-### Identifica os subconjuntos de tarefas
-#  ###
-# Assume que o input.json tem "type": "bebe" nas tarefas relevantes
-Tarefas_Bebe = [j for j, task_data in data["tasks"].items() if task_data.get("type") == "bebe"]
-# Tarefas_Casa não é necessária para as restrições, pois D (Tarefas) já é usado na Restrição 4.2
-
-
-# Parâmetros
-D = {j: data["tasks"][j]["duration"]//Duration_per_slot for j in Tarefas} # d_j (duração)
-O = {j: range(data["tasks"][j]["occurrences"]) for j in Tarefas} # o (ocorrências)
-#A = {i: data["availability"][i] for i in Pessoas} # A_i,t (disponibilidade)
-A = data["availability_binaria"]
-C = data["capacity"] # c_i,j (capacidade/aptidão)
-Dependencies = data.get("dependencies", {}) # Dependências entre tarefas
-
-###  Carregamento robusto do Limite de Carga (Horas -> Slots) ##
-load_limit_hours = data.get("load_limit", {})
-if Duration_per_slot > 0:
-    Load_Limit = {i: int((limit_in_hours * 60) / Duration_per_slot) 
-                  for i, limit_in_hours in load_limit_hours.items()}
+limite_carga_horas = data.get("limite_carga_horas", {})
+if duracao_slot > 0:
+    limite_carga = {i: int((limite_em_horas * 60) / duracao_slot) 
+                    for i, limite_em_horas in limite_carga_horas.items()}
 else:
-    Load_Limit = {} # Dicionário vazio se a duração do slot for 0
-    print("Aviso: 'slot_duration_min' é 0. O Limite de Carga (Load_Limit) não será aplicado.")
+    limite_carga = {}
+    print("Aviso: 'slot_duracao_min' é 0. O Limite de Carga não será aplicado.")
 
 # ==============================
 # 2. Criação do modelo
 # ==============================
-model = pulp.LpProblem("Alocacao_Cuidados_Bebe", pulp.LpMinimize)
+
+model = pulp.LpProblem("x_Cuidados_Bebe", pulp.LpMinimize)
 
 # Variável Delta para o Balanceamento 
 # Representa a maior diferença de % de carga entre duas pessoas
-delta = pulp.LpVariable("Delta_Balanceamento", lowBound=0, cat="Continuous")
+delta_balanceamento = pulp.LpVariable("Delta_Balanceamento", lowBound=0, cat="Continuous")
 
 # Variáveis de decisão: x[i][j][o][t] = 1 se pessoa i inicia tarefa j, ocorrência o no slot t
 x = {}
-for i in Pessoas:
+for i in pessoas:
     x[i] = {}
-    for j in Tarefas:
+    for j in tarefas:
         x[i][j] = {}
-        for o in O[j]:
+        for o in ocorrencias[j]:
             x[i][j][o] = {}
-            for t in range(Slots):
-                # Usando o nome da variável do LaTeX na LPVariable
+            for t in range(total_slots):
                 x[i][j][o][t] = pulp.LpVariable(f"x_{i}_{j}_{o}_{t}", cat="Binary")
 
-# Proibir inícios inválidos: se t + D[j] > Slots então x[...] == 0
-for i in Pessoas:
-    for j in Tarefas:
-        dur = D[j]
-        last_start = Slots - dur  # último slot válido para iniciar j
-        for o in O[j]:
-            for t in range(Slots):
-                if t > last_start:
+# Proibir inícios inválidos: se t + D[j] > Slots então x[i][j][o][t] == 0
+for i in pessoas:
+    for j in tarefas:
+        dur = duracao_tarefas[j]
+        ultimo_inicio = total_slots - dur
+        for o in ocorrencias[j]:
+            for t in range(total_slots):
+                if t > ultimo_inicio:
                     model += x[i][j][o][t] == 0
 
 # ==============================
 # 3. Função Objetivo
 # ==============================
-# Termo 1: Aptidão (Minimizar "incapacidade")
+
+# Termo 1: Aptidão (Minimizar falta de aptidão)
 objetivo_aptidao = pulp.lpSum(
-    (1 - C[i][j]) * x[i][j][o][t]
-    for i in Pessoas
-    for j in Tarefas 
-    for o in O[j]
-    for t in range(Slots)
+    (1 - capacidade[i][j]) * x[i][j][o][t]
+    for i in pessoas
+    for j in tarefas 
+    for o in ocorrencias[j]
+    for t in range(total_slots)
 )
 
 # Termo 2: Penalidade de Desequilíbrio (alpha * delta)
-# O solver vai tentar fazer o delta ser o menor possível para minimizar o custo total
-model += objetivo_aptidao + (alpha * delta)
+model += objetivo_aptidao + (alpha * delta_balanceamento)
 
 # ==============================
 # 4. Restrições
 # ==============================
 
 # 4.1 Cada ocorrência de tarefa deve ser realizada exatamente uma vez
-for j in Tarefas: # j in D
-    for o in O[j]:
-        model += pulp.lpSum(x[i][j][o][t] for i in Pessoas for t in range(Slots)) == 1
+for j in tarefas:
+    for o in ocorrencias[j]:
+        model += pulp.lpSum(x[i][j][o][t] for i in pessoas for t in range(total_slots)) == 1
 
 # 4.2 Não sobreposição de tarefas por pessoa
-for i in Pessoas:
-    for t in range(Slots):
-        # A soma considera TODAS as tarefas (j in D), conforme o LaTeX
+for i in pessoas:
+    for t in range(total_slots):
         model += (
             pulp.lpSum(
                 x[i][j][o][t_start]
-                for j in Tarefas # j in D
-                for o in O[j]
-                for t_start in range(max(0, t - D[j] + 1), t + 1)
+                for j in tarefas
+                for o in ocorrencias[j]
+                for t_start in range(max(0, t - duracao_tarefas[j] + 1), t + 1)
             )
             <= 1
         )
 
-
-### --- 4.3 Restrição Global (Apenas Tarefas do Bebê) --- ###
-# Conforme Restrição 3 do LaTeX, a soma é apenas para j in D_B
-for t in range(Slots):
+# 4.3 Não sobreposição de tarefas do bebê
+for t in range(total_slots):
     expr = []
-    for i in Pessoas:
-        # Itera apenas sobre as tarefas do bebê (j in D_B)
-        for j in Tarefas_Bebe: 
-            dur = D[j]
+    for i in pessoas:
+        for j in tarefas_bebe:
+            dur = duracao_tarefas[j]
             t_start_min = max(0, t - dur + 1)
-            t_start_max = min(t, Slots - dur) 
-            for o in O[j]:
+            t_start_max = min(t, total_slots - dur)
+            for o in ocorrencias[j]:
                 for t_start in range(t_start_min, t_start_max + 1):
                     expr.append(x[i][j][o][t_start])
     model += pulp.lpSum(expr) <= 1
 
 
-# 4.4 Respeitar disponibilidade
-for i in Pessoas:
-    for j in Tarefas: # j in D
-        for o in O[j]:
-            for t in range(Slots):
-                if A[i][t] == 0:
-                    model += x[i][j][o][t] == 0 
+# 4.4 Respeitar disponibilidade das pessoas
+for i in pessoas:
+    for j in tarefas:
+        for o in ocorrencias[j]:
+            for t in range(total_slots):
+                if disponibilidade_pessoas[i][t] == 0:
+                    model += x[i][j][o][t] == 0
 
-# 4.4b Respeitar horários das Tarefas
-# Se Task_Availability[j][t] == 0, a tarefa j não pode começar no slot t.
-for j in Tarefas:
-    # Otimização: só adiciona restrição se houver algum bloqueio para essa tarefa
-    if 0 in Task_Availability[j]: 
-        for o in O[j]:
-            for t in range(Slots):
-                if Task_Availability[j][t] == 0:
-                    for i in Pessoas:
+# 4.5 Respeitar horários das Tarefas
+# Se disponibilidade_tarefas[j][t] == 0, a tarefa j não pode começar no slot t.
+for j in tarefas:
+    if disponibilidade_tarefas and 0 in disponibilidade_tarefas[j]:
+        for o in ocorrencias[j]:
+            for t in range(total_slots):
+                if disponibilidade_tarefas[j][t] == 0:
+                    for i in pessoas:
                         model += x[i][j][o][t] == 0
 
-# 4.5 Precedência 
-for j1_id in Dependencies: 
-    j2_id = Dependencies[j1_id]["next"] 
-    W = math.ceil(Dependencies[j1_id]["window"] / Duration_per_slot)
-    
-    for o in O[j1_id]: 
-        for t2 in range(Slots): 
-            d_j1 = D[j1_id]
+# 4.6 Precedência entre tarefas
+for j1_id in dependencias:
+    j2_id = dependencias[j1_id]["proxima_tarefa"]
+    W = math.ceil(dependencias[j1_id]["janela_de_espera"] / duracao_slot)
+
+    for o in ocorrencias[j1_id]:
+        for t2 in range(total_slots):
+            d_j1 = duracao_tarefas[j1_id]
             t1_min = max(0, t2 - d_j1 - W)
-            t1_max = min(t2 - d_j1, Slots - d_j1) 
-            
+            t1_max = min(t2 - d_j1, total_slots - d_j1)
+
             if t1_min > t1_max:
-                for i2 in Pessoas:
-                    model += x[i2][j2_id][o][t2] == 0 
+                # Se não existe nenhum início válido de j1 que permita j2 iniciar em t2,
+                # então nenhum i2 pode iniciar j2 em t2 (forçamos a variável a 0).
+                for i2 in pessoas:
+                    model += x[i2][j2_id][o][t2] == 0
                 continue
 
             lhs = []
-            for i1 in Pessoas:
+            for i1 in pessoas:
                 for t1 in range(t1_min, t1_max + 1):
                     lhs.append(x[i1][j1_id][o][t1])
 
-            for i2 in Pessoas:
+            for i2 in pessoas:
                 model += pulp.lpSum(lhs) >= x[i2][j2_id][o][t2]
 
 # 4.6 Restrição de periodicidade (tarefas recorrentes)
-if "periodicity" in data:
-    for j, P_j in data["periodicity"].items(): # j in D
-        P_j_slots = math.ceil(P_j / Duration_per_slot)
-        dur = D[j]
-        last_start = Slots - dur
-        for o in range(len(O[j]) - 1):
+if "periodicidade" in data:
+    for j, P_j in data["periodicidade"].items():
+        P_j_slots = math.ceil(P_j / duracao_slot)
+        dur = duracao_tarefas[j]
+        last_start = total_slots - dur
+        for o in range(len(ocorrencias[j]) - 1):
             for t1 in range(0, last_start + 1):
                 t2 = t1 + P_j_slots
                 if t2 <= last_start:
-                    model += pulp.lpSum(x[i][j][o][t1] for i in Pessoas) == \
-                             pulp.lpSum(x[i][j][o+1][t2] for i in Pessoas)
+                    model += pulp.lpSum(x[i][j][o][t1] for i in pessoas) == \
+                             pulp.lpSum(x[i][j][o+1][t2] for i in pessoas)
                 else:
-                    model += pulp.lpSum(x[i][j][o][t1] for i in Pessoas) == 0
+                    # Se o deslocamento pela periodicidade ultrapassa o horizonte,
+                    # então um início em t1 não é válido (eliminação de inicios inválidos).
+                    model += pulp.lpSum(x[i][j][o][t1] for i in pessoas) == 0
 
-# 4.7 Limite de carga de trabalho
-if Load_Limit:
-    for i in Pessoas:
-        # Verifica se a pessoa 'i' tem um limite definido no dicionário
-        if i in Load_Limit: 
-            L_i = Load_Limit[i]
-            L_i_slots = L_i // Duration_per_slot  
-            model += pulp.lpSum(
-                D[j] * x[i][j][o][t] 
-                for j in Tarefas # j in D
-                for o in O[j]
-                for t in range(Slots)
-            ) <= L_i
+# 4.8 e 4.9 OTIMIZADOS: Limites e Balanceamento
+
+# 1. Pré-cálculo das Expressões de Carga
+# Isso cria a expressão linear da carga total (em slots) para cada pessoa UMA ÚNICA VEZ.
+expressao_carga_pessoa = {}
+
+for i in pessoas:
+    # Monta a soma de (duração * variável_decisao)
+    expressao_carga_pessoa[i] = pulp.lpSum(
+        duracao_tarefas[j] * x[i][j][o][t]
+        for j in tarefas
+        for o in ocorrencias[j]
+        for t in range(total_slots)
+    )
+
+# 2. Aplicação da Restrição "Hard" (Limite Máximo)
+# Ninguém pode ultrapassar seu teto de horas, independente do balanceamento.
+if limite_carga:
+    for i in pessoas:
+        if i in limite_carga:
+            L_i = limite_carga[i]
+            # Usa a expressão pré-calculada (muito mais rápido)
+            model += expressao_carga_pessoa[i] <= L_i, f"Limite_Maximo_{i}"
+
+# 3. Aplicação da Restrição "Soft" (Balanceamento Relativo / Minimax)
+# Tenta igualar a % de ocupação entre as pessoas.
+if limite_carga and alpha > 0:
+    # Filtra apenas pessoas com limite definido > 0
+    pessoas_validas = [p for p in pessoas if p in limite_carga and limite_carga[p] > 0]
+    
+    if len(pessoas_validas) >= 2:
+        # itertools.combinations evita pares duplicados e auto-comparação (ex: A-B é igual B-A)
+        for p1, p2 in itertools.combinations(pessoas_validas, 2):
+            L1 = float(limite_carga[p1])
+            L2 = float(limite_carga[p2])
+            
+            # Percentual de uso = Carga Real / Limite Total
+            pct_p1 = expressao_carga_pessoa[p1] / L1
+            pct_p2 = expressao_carga_pessoa[p2] / L2
+            
+            # Para forçar Delta >= |pct_p1 - pct_p2|, adicionamos duas restrições lineares:
+            
+            # 1. (P1 - P2) <= Delta
+            model += pct_p1 - pct_p2 <= delta_balanceamento, f"Balanceamento_{p1}_{p2}_pos"
+            
+            # 2. (P2 - P1) <= Delta
+            model += pct_p2 - pct_p1 <= delta_balanceamento, f"Balanceamento_{p1}_{p2}_neg"
+
 
 # ==============================
-# 5. Resolver modelo E DIAGNÓSTICO
+# 5. Resolver modelo e mostrar solução
 # ==============================
+
+# Usa um cronômetro de alta resolução para medir o tempo gasto pelo solver.
+start_time = time.perf_counter()
 model.solve(pulp.PULP_CBC_CMD(msg=False))
+end_time = time.perf_counter()
+elapsed_seconds = end_time - start_time
 
-# --- Diagnóstico Adicionado ---
 status_code = model.status
 status_string = pulp.LpStatus[status_code]
-print(f"\n--- DIAGNÓSTICO DA SOLUÇÃO ---")
 print(f"Status do Modelo: {status_string}")
+print(f"Tempo de resolução (s): {elapsed_seconds:.3f}")
 
 if status_string != "Optimal":
-    print("\nO modelo NÃO ENCONTROU uma solução ótima. O problema é provavelmente INVIÁVEL (Infeasible).")
-    print("Verifique os parâmetros no seu arquivo 'input.json', especialmente:")
-    print("1. O número de ocorrências e a duração das tarefas vs. o total de Slots.")
-    print("2. A restrição de Disponibilidade (A[i][t]) vs. as necessidades das tarefas (4.4).")
-    print("3. As janelas de Precedência (W) e Periodicidade (P_j), que podem ser muito restritivas (4.5 e 4.6).")
+    print("\nO modelo NÃO ENCONTROU uma solução ótima. O problema é INVIÁVEL (Infeasible).")
 else:
     print(f"Valor da Função Objetivo: {pulp.value(model.objective):.2f}")
-# ------------------------------
-
 
 # ==============================
 # 6. Exportar solução em JSON
 # ==============================
+
 if status_string == "Optimal":
     solution = []
-    for i in Pessoas:
-        for j in Tarefas:
-            for o in O[j]:
-                for t in range(Slots):
-                    # Usamos uma pequena tolerância para verificar se a variável é 1
+    for i in pessoas:
+        for j in tarefas:
+            for o in ocorrencias[j]:
+                for t in range(total_slots):
                     if pulp.value(x[i][j][o][t]) > 0.99:
+                        # calcula dia e horário legíveis para início e fim
+                        slots_por_dia = (24 * 60) // duracao_slot
+                        inicio_slot = t
+                        fim_slot = t + duracao_tarefas[j]
+
+                        dia_inicio = (inicio_slot // slots_por_dia) + 1  # 1-based (1 = segunda, 2 = terça, ...)
+                        slot_no_dia_inicio = inicio_slot % slots_por_dia
+                        minutos_inicio = slot_no_dia_inicio * duracao_slot
+                        hora_inicio = f"{minutos_inicio // 60:02d}:{minutos_inicio % 60:02d}"
+
+                        dia_fim = (fim_slot // slots_por_dia) + 1
+                        slot_no_dia_fim = fim_slot % slots_por_dia
+                        minutos_fim = slot_no_dia_fim * duracao_slot
+                        hora_fim = f"{minutos_fim // 60:02d}:{minutos_fim % 60:02d}"
+
                         solution.append({
                             "pessoa": i,
                             "tarefa": j,
                             "ocorrencia": o,
-                            "inicio_slot": t,
-                            "fim_slot": t + D[j]
+                            "inicio_slot": inicio_slot,
+                            "fim_slot": fim_slot,
+                            "dia_inicio": dia_inicio,
+                            "hora_inicio": hora_inicio,
+                            "dia_fim": dia_fim,
+                            "hora_fim": hora_fim,
                         })
 
     # Ordena por tempo
     solution = sorted(solution, key=lambda x: x["inicio_slot"])
 
-    print("\n--- SOLUÇÃO ENCONTRADA ---")
+    print("\nSOLUÇÃO ENCONTRADA")
     print(json.dumps(solution, indent=2))
 
 
@@ -264,6 +308,7 @@ if status_string == "Optimal":
     file = f"solucao_cuidados_{now}.csv"
     # Salva em CSV
     df.to_csv(file, index=False, encoding="utf-8")
-    print("\nSolução salva em 'solucao_cuidados.csv'.")
+    print()
+    print(f"Solução salva em {file}.")
 else:
     print("\nNenhuma solução viável foi encontrada para exportar.")
