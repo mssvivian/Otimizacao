@@ -57,7 +57,7 @@ else:
 # ==============================
 # 2. Criação do modelo
 # ==============================
-
+print ("ALPHA: ", alpha )
 model = pulp.LpProblem("x_Cuidados_Bebe", pulp.LpMinimize)
 
 # Variável Delta para o Balanceamento 

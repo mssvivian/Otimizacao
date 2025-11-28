@@ -2,105 +2,410 @@
   "alpha": 1,
   "dias": 7,
   "slot_duracao_min": 30,
-  "pessoas": ["mae", "pai", "avo", "tio", "tia", "babysitter"],
+  "pessoas": [
+    "mae",
+    "pai",
+    "avo",
+    "tio",
+    "tia",
+    "baba"
+  ],
   "tarefas": {
-    "amamentar": { "duracao": 60, "ocorrencias": 56, "tipo": "bebe" },
-    "arrotar": { "duracao": 30, "ocorrencias": 56, "tipo": "bebe" },
-    "trocar_fralda": { "duracao": 30, "ocorrencias": 56, "tipo": "bebe" },
-    "ninar": { "duracao": 30, "ocorrencias": 56, "tipo": "bebe" },
-    "banho": { "duracao": 30, "ocorrencias": 7, "tipo": "bebe" },
-    "cortar_unha": { "duracao": 15, "ocorrencias": 2, "tipo": "bebe" },
-    "banho_de_sol": { "duracao": 15, "ocorrencias": 7, "tipo": "bebe" }, 
-    "lavar_louca": { "duracao": 30, "ocorrencias": 14, "tipo": "casa" },
-    "lavar_banheiro": { "duracao": 60, "ocorrencias": 7, "tipo": "casa" },
-    "tirar_lixo": { "duracao": 15, "ocorrencias": 7, "tipo": "casa" },
-    "aspirar_casa": { "duracao": 30, "ocorrencias": 7, "tipo": "casa" },  
-    "lavar_roupa": { "duracao": 30, "ocorrencias": 5, "tipo": "casa" },
-    "passar_roupa": { "duracao": 30, "ocorrencias": 4, "tipo": "casa" },
-    "estender_roupa": { "duracao": 15, "ocorrencias": 5, "tipo": "casa" },
-    "preparar_cafe_manha": { "duracao": 15, "ocorrencias": 7, "tipo": "casa" }, 
-    "preparar_jantar": { "duracao": 30, "ocorrencias": 7, "tipo": "casa" },
-    "preparar_almoco": { "duracao": 30, "ocorrencias": 7, "tipo": "casa" } 
+    "amamentar": {
+      "duracao": 60,
+      "ocorrencias": 56,
+      "tipo": "bebe"
+    },
+    "arrotar": {
+      "duracao": 30,
+      "ocorrencias": 56,
+      "tipo": "bebe"
+    },
+    "trocar_fralda": {
+      "duracao": 30,
+      "ocorrencias": 56,
+      "tipo": "bebe"
+    },
+    "ninar": {
+      "duracao": 30,
+      "ocorrencias": 56,
+      "tipo": "bebe"
+    },
+    "banho": {
+      "duracao": 30,
+      "ocorrencias": 7,
+      "tipo": "bebe"
+    },
+    "cortar_unha": {
+      "duracao": 15,
+      "ocorrencias": 2,
+      "tipo": "bebe"
+    },
+    "banho_de_sol": {
+      "duracao": 15,
+      "ocorrencias": 7,
+      "tipo": "bebe"
+    },
+    "lavar_louca_cafe": {
+      "duracao": 30,
+      "ocorrencias": 7,
+      "tipo": "casa"
+    },
+    "lavar_louca_almoco": {
+      "duracao": 30,
+      "ocorrencias": 7,
+      "tipo": "casa"
+    },
+    "lavar_louca_jantar": {
+      "duracao": 30,
+      "ocorrencias": 7,
+      "tipo": "casa"
+    },
+    "lavar_banheiro": {
+      "duracao": 60,
+      "ocorrencias": 7,
+      "tipo": "casa"
+    },
+    "tirar_lixo": {
+      "duracao": 15,
+      "ocorrencias": 7,
+      "tipo": "casa"
+    },
+    "aspirar_casa": {
+      "duracao": 30,
+      "ocorrencias": 7,
+      "tipo": "casa"
+    },
+    "lavar_roupa": {
+      "duracao": 30,
+      "ocorrencias": 5,
+      "tipo": "casa"
+    },
+    "passar_roupa": {
+      "duracao": 30,
+      "ocorrencias": 4,
+      "tipo": "casa"
+    },
+    "estender_roupa": {
+      "duracao": 15,
+      "ocorrencias": 5,
+      "tipo": "casa"
+    },
+    "preparar_cafe_manha": {
+      "duracao": 15,
+      "ocorrencias": 7,
+      "tipo": "casa"
+    },
+    "preparar_jantar": {
+      "duracao": 30,
+      "ocorrencias": 7,
+      "tipo": "casa"
+    },
+    "preparar_almoco": {
+      "duracao": 30,
+      "ocorrencias": 7,
+      "tipo": "casa"
+    }
   },
   "disponibilidade_pessoas": {
     "mae": [
-      { "dia": "todos", "inicio": "00:00", "fim": "24:00" }
+      {
+        "dia": "todos",
+        "inicio": "00:00",
+        "fim": "24:00"
+      }
     ],
     "pai": [
-      { "dia": "seg", "inicio": "00:00", "fim": "08:00" },
-      { "dia": "seg", "inicio": "18:00", "fim": "24:00" },
-      { "dia": "ter", "inicio": "00:00", "fim": "08:00" },
-      { "dia": "ter", "inicio": "18:00", "fim": "24:00" },
-      { "dia": "qua", "inicio": "00:00", "fim": "08:00" },
-      { "dia": "qua", "inicio": "18:00", "fim": "24:00" },
-      { "dia": "qui", "inicio": "00:00", "fim": "08:00" },
-      { "dia": "qui", "inicio": "18:00", "fim": "24:00" },
-      { "dia": "sex", "inicio": "00:00", "fim": "08:00" },
-      { "dia": "sex", "inicio": "18:00", "fim": "24:00" },
-      { "dia": "sab", "inicio": "00:00", "fim": "24:00" },
-      { "dia": "dom", "inicio": "00:00", "fim": "24:00" }
+      {
+        "dia": "seg",
+        "inicio": "00:00",
+        "fim": "08:00"
+      },
+      {
+        "dia": "seg",
+        "inicio": "18:00",
+        "fim": "24:00"
+      },
+      {
+        "dia": "ter",
+        "inicio": "00:00",
+        "fim": "08:00"
+      },
+      {
+        "dia": "ter",
+        "inicio": "18:00",
+        "fim": "24:00"
+      },
+      {
+        "dia": "qua",
+        "inicio": "00:00",
+        "fim": "08:00"
+      },
+      {
+        "dia": "qua",
+        "inicio": "18:00",
+        "fim": "24:00"
+      },
+      {
+        "dia": "qui",
+        "inicio": "00:00",
+        "fim": "08:00"
+      },
+      {
+        "dia": "qui",
+        "inicio": "18:00",
+        "fim": "24:00"
+      },
+      {
+        "dia": "sex",
+        "inicio": "00:00",
+        "fim": "08:00"
+      },
+      {
+        "dia": "sex",
+        "inicio": "18:00",
+        "fim": "24:00"
+      },
+      {
+        "dia": "sab",
+        "inicio": "00:00",
+        "fim": "24:00"
+      },
+      {
+        "dia": "dom",
+        "inicio": "00:00",
+        "fim": "24:00"
+      }
     ],
     "avo": [
-      { "dia": "seg", "inicio": "07:00", "fim": "17:00" },
-      { "dia": "ter", "inicio": "07:00", "fim": "17:00" },
-      { "dia": "qua", "inicio": "07:00", "fim": "17:00" },
-      { "dia": "qui", "inicio": "07:00", "fim": "17:00" },
-      { "dia": "sex", "inicio": "07:00", "fim": "17:00" }
+      {
+        "dia": "seg",
+        "inicio": "07:00",
+        "fim": "17:00"
+      },
+      {
+        "dia": "ter",
+        "inicio": "07:00",
+        "fim": "17:00"
+      },
+      {
+        "dia": "qua",
+        "inicio": "07:00",
+        "fim": "17:00"
+      },
+      {
+        "dia": "qui",
+        "inicio": "07:00",
+        "fim": "17:00"
+      },
+      {
+        "dia": "sex",
+        "inicio": "07:00",
+        "fim": "17:00"
+      }
     ],
     "tio": [
-      { "dia": "sab", "inicio": "19:00", "fim": "23:00" },
-      { "dia": "dom", "inicio": "07:00", "fim": "16:00" }
+      {
+        "dia": "sab",
+        "inicio": "19:00",
+        "fim": "23:00"
+      },
+      {
+        "dia": "dom",
+        "inicio": "07:00",
+        "fim": "16:00"
+      }
     ],
     "tia": [
-      { "dia": "sab", "inicio": "15:00", "fim": "18:00" },
-      { "dia": "dom", "inicio": "15:00", "fim": "18:00" }
+      {
+        "dia": "sab",
+        "inicio": "15:00",
+        "fim": "18:00"
+      },
+      {
+        "dia": "dom",
+        "inicio": "15:00",
+        "fim": "18:00"
+      }
     ],
-    "babysitter": [
-      { "dia": "seg", "inicio": "15:00", "fim": "20:00" },
-      { "dia": "ter", "inicio": "15:00", "fim": "20:00" },
-      { "dia": "qua", "inicio": "15:00", "fim": "20:00" },
-      { "dia": "qui", "inicio": "15:00", "fim": "20:00" },
-      { "dia": "sex", "inicio": "15:00", "fim": "20:00" }
+    "baba": [
+      {
+        "dia": "seg",
+        "inicio": "15:00",
+        "fim": "20:00"
+      },
+      {
+        "dia": "ter",
+        "inicio": "15:00",
+        "fim": "20:00"
+      },
+      {
+        "dia": "qua",
+        "inicio": "15:00",
+        "fim": "20:00"
+      },
+      {
+        "dia": "qui",
+        "inicio": "15:00",
+        "fim": "20:00"
+      },
+      {
+        "dia": "sex",
+        "inicio": "15:00",
+        "fim": "20:00"
+      }
     ]
   },
   "aptidao": {
-     "mae": {"amamentar": 1.0, "arrotar": 0.9, "trocar_fralda": 0.8, "ninar": 0.8, "banho": 0.9, "cortar_unha": 0.8,
-      "banho_de_sol": 1.0, "lavar_louca": 0.7, "lavar_banheiro": 0.3, "tirar_lixo": 0.6, "aspirar_casa": 0.5,
-      "lavar_roupa": 0.8, "passar_roupa": 0.7, "estender_roupa": 0.9, "preparar_cafe_manha": 0.8,
-      "preparar_jantar": 0.8, "preparar_almoco": 0.8},
-
-     "pai": {"amamentar": 0.5, "arrotar": 0.9, "trocar_fralda": 0.7, "ninar": 0.8, "banho": 0.9, "cortar_unha": 0.6,
-      "banho_de_sol": 1.0, "lavar_louca": 0.8, "lavar_banheiro": 0.8, "tirar_lixo": 0.9, "aspirar_casa": 0.8,
-      "lavar_roupa": 0.8, "passar_roupa": 0.6, "estender_roupa": 0.9, "preparar_cafe_manha": 0.8,
-      "preparar_jantar": 0.8, "preparar_almoco": 0.8},
-
-     "avo": {"amamentar": 0.5, "arrotar": 0.9, "trocar_fralda": 0.7, "ninar": 0.8, "banho": 0.9, "cortar_unha": 0.9,
-      "banho_de_sol": 1.0, "lavar_louca": 0.6, "lavar_banheiro": 0.4, "tirar_lixo": 0.5, "aspirar_casa": 0.4,
-      "lavar_roupa": 0.5, "passar_roupa": 0.5, "estender_roupa": 0.5, "preparar_cafe_manha": 0.7,
-      "preparar_jantar": 0.8, "preparar_almoco": 0.9},
-
-     "tio": {"amamentar": 0.5, "arrotar": 0.9, "trocar_fralda": 0.3, "ninar": 0.8, "banho": 0.9, "cortar_unha": 0.4,
-      "banho_de_sol": 1.0, "lavar_louca": 0.5, "lavar_banheiro": 0.6, "tirar_lixo": 0.6, "aspirar_casa": 0.5,
-      "lavar_roupa": 0.4, "passar_roupa": 0.3, "estender_roupa": 0.4, "preparar_cafe_manha": 0.6,
-      "preparar_jantar": 0.5, "preparar_almoco": 0.5},
-
-     "tia": {"amamentar": 0.5, "arrotar": 0.9, "trocar_fralda": 0.4, "ninar": 0.8, "banho": 0.9, "cortar_unha": 0.7,
-      "banho_de_sol": 1.0, "lavar_louca": 0.7, "lavar_banheiro": 0.5, "tirar_lixo": 0.6, "aspirar_casa": 0.6,
-      "lavar_roupa": 0.6, "passar_roupa": 0.5, "estender_roupa": 0.7, "preparar_cafe_manha": 0.7,
-      "preparar_jantar": 0.7, "preparar_almoco": 0.7},
-
-     "babysitter": {"amamentar": 0.5, "arrotar": 0.9, "trocar_fralda": 0.9, "ninar": 0.9, "banho": 0.9, "cortar_unha": 0.8,
-      "banho_de_sol": 1.0, "lavar_louca": 0.0, "lavar_banheiro": 0.0, "tirar_lixo": 0.0, "aspirar_casa": 0.0,
-      "lavar_roupa": 0.0, "passar_roupa": 0.0, "estender_roupa": 0.0, "preparar_cafe_manha": 0.0,
-      "preparar_jantar": 0.0, "preparar_almoco": 0.0}
+    "mae": {
+      "amamentar": 1.0,
+      "arrotar": 0.9,
+      "trocar_fralda": 0.8,
+      "ninar": 0.8,
+      "banho": 0.9,
+      "cortar_unha": 0.8,
+      "banho_de_sol": 1.0,
+      "lavar_louca_cafe": 0.7,
+      "lavar_louca_almoco": 0.7,
+      "lavar_louca_jantar": 0.7,
+      "lavar_banheiro": 0.3,
+      "tirar_lixo": 0.6,
+      "aspirar_casa": 0.5,
+      "lavar_roupa": 0.8,
+      "passar_roupa": 0.7,
+      "estender_roupa": 0.9,
+      "preparar_cafe_manha": 0.8,
+      "preparar_jantar": 0.8,
+      "preparar_almoco": 0.8
+    },
+    "pai": {
+      "amamentar": 0.5,
+      "arrotar": 0.9,
+      "trocar_fralda": 0.7,
+      "ninar": 0.8,
+      "banho": 0.9,
+      "cortar_unha": 0.6,
+      "banho_de_sol": 1.0,
+      "lavar_louca_cafe": 0.8,
+      "lavar_louca_almoco": 0.8,
+      "lavar_louca_jantar": 0.8,
+      "lavar_banheiro": 0.8,
+      "tirar_lixo": 0.9,
+      "aspirar_casa": 0.8,
+      "lavar_roupa": 0.8,
+      "passar_roupa": 0.6,
+      "estender_roupa": 0.9,
+      "preparar_cafe_manha": 0.8,
+      "preparar_jantar": 0.8,
+      "preparar_almoco": 0.8
+    },
+    "avo": {
+      "amamentar": 0.5,
+      "arrotar": 0.9,
+      "trocar_fralda": 0.7,
+      "ninar": 0.8,
+      "banho": 0.9,
+      "cortar_unha": 0.9,
+      "banho_de_sol": 1.0,
+      "lavar_louca_cafe": 0.6,
+      "lavar_louca_almoco": 0.6,
+      "lavar_louca_jantar": 0.6,
+      "lavar_banheiro": 0.4,
+      "tirar_lixo": 0.5,
+      "aspirar_casa": 0.4,
+      "lavar_roupa": 0.5,
+      "passar_roupa": 0.5,
+      "estender_roupa": 0.5,
+      "preparar_cafe_manha": 0.7,
+      "preparar_jantar": 0.8,
+      "preparar_almoco": 0.9
+    },
+    "tio": {
+      "amamentar": 0.5,
+      "arrotar": 0.9,
+      "trocar_fralda": 0.3,
+      "ninar": 0.8,
+      "banho": 0.9,
+      "cortar_unha": 0.4,
+      "banho_de_sol": 1.0,
+      "lavar_louca_cafe": 0.5,
+      "lavar_louca_almoco": 0.5,
+      "lavar_louca_jantar": 0.5,
+      "lavar_banheiro": 0.6,
+      "tirar_lixo": 0.6,
+      "aspirar_casa": 0.5,
+      "lavar_roupa": 0.4,
+      "passar_roupa": 0.3,
+      "estender_roupa": 0.4,
+      "preparar_cafe_manha": 0.6,
+      "preparar_jantar": 0.5,
+      "preparar_almoco": 0.5
+    },
+    "tia": {
+      "amamentar": 0.5,
+      "arrotar": 0.9,
+      "trocar_fralda": 0.4,
+      "ninar": 0.8,
+      "banho": 0.9,
+      "cortar_unha": 0.7,
+      "banho_de_sol": 1.0,
+      "lavar_louca_cafe": 0.7,
+      "lavar_louca_almoco": 0.7,
+      "lavar_louca_jantar": 0.7,
+      "lavar_banheiro": 0.5,
+      "tirar_lixo": 0.6,
+      "aspirar_casa": 0.6,
+      "lavar_roupa": 0.6,
+      "passar_roupa": 0.5,
+      "estender_roupa": 0.7,
+      "preparar_cafe_manha": 0.7,
+      "preparar_jantar": 0.7,
+      "preparar_almoco": 0.7
+    },
+    "baba": {
+      "amamentar": 0.5,
+      "arrotar": 0.9,
+      "trocar_fralda": 0.9,
+      "ninar": 0.9,
+      "banho": 0.9,
+      "cortar_unha": 0.8,
+      "banho_de_sol": 1.0,
+      "lavar_louca_cafe": 0.0,
+      "lavar_louca_almoco": 0.0,
+      "lavar_louca_jantar": 0.0,
+      "lavar_banheiro": 0.0,
+      "tirar_lixo": 0.0,
+      "aspirar_casa": 0.0,
+      "lavar_roupa": 0.0,
+      "passar_roupa": 0.0,
+      "estender_roupa": 0.0,
+      "preparar_cafe_manha": 0.0,
+      "preparar_jantar": 0.0,
+      "preparar_almoco": 0.0
+    }
   },
   "dependencias": {
-    "amamentar": {"proxima_tarefa": "arrotar", "janela_de_espera": 0},
-    "preparar_almoco": {"proxima_tarefa": "lavar_louca", "janela_de_espera": 300},
-    "preparar_jantar": {"proxima_tarefa": "lavar_louca", "janela_de_espera": 300},
-    "lavar_roupa": {"proxima_tarefa": "estender_roupa", "janela_de_espera": 60}
+    "amamentar": {
+      "proxima_tarefa": "arrotar",
+      "janela_de_espera": 0
+    },
+    "preparar_cafe_manha": {
+      "proxima_tarefa": "lavar_louca_cafe",
+      "janela_de_espera": 300
+    },
+    "preparar_almoco": {
+      "proxima_tarefa": "lavar_louca_almoco",
+      "janela_de_espera": 300
+    },
+    "preparar_jantar": {
+      "proxima_tarefa": "lavar_louca_jantar",
+      "janela_de_espera": 300
+    },
+    "lavar_roupa": {
+      "proxima_tarefa": "estender_roupa",
+      "janela_de_espera": 60
+    }
   },
-
   "periodicidade": {
     "ninar": 180,
     "amamentar": 180,
@@ -112,13 +417,42 @@
     "avo": 660,
     "tio": 600,
     "tia": 420,
-    "babysitter": 300
+    "baba": 300
   },
   "disponibilidade_tarefas": {
-    "banho": [ { "inicio": "07:00", "fim": "21:00" } ],
-    "banho_de_sol": [ { "inicio": "07:00", "fim": "10:00" }, {"inicio": "15:00", "fim": "17:00"} ],
-    "preparar_cafe_manha": [ { "inicio": "05:00", "fim": "09:00" } ],
-    "preparar_almoco": [ { "inicio": "09:00", "fim": "13:00" } ],
-    "preparar_jantar": [ { "inicio": "17:00", "fim": "22:00" } ]
+    "banho": [
+      {
+        "inicio": "07:00",
+        "fim": "21:00"
+      }
+    ],
+    "banho_de_sol": [
+      {
+        "inicio": "07:00",
+        "fim": "10:00"
+      },
+      {
+        "inicio": "15:00",
+        "fim": "17:00"
+      }
+    ],
+    "preparar_cafe_manha": [
+      {
+        "inicio": "05:00",
+        "fim": "09:00"
+      }
+    ],
+    "preparar_almoco": [
+      {
+        "inicio": "09:00",
+        "fim": "13:00"
+      }
+    ],
+    "preparar_jantar": [
+      {
+        "inicio": "17:00",
+        "fim": "22:00"
+      }
+    ]
   }
 }
