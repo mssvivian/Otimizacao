@@ -134,7 +134,7 @@ def carregar_dados(caminho_arquivo):
 
         regras_disponibilidade = dados["disponibilidade_pessoas"]
         dados_tarefas = dados["tarefas"]
-        janelas_tarefas = dados.get("horario_tarefas", {})
+        janelas_tarefas = dados.get("disponibilidade_tarefas", {})
 
     except KeyError as e:
         print(f"Erro: Chave obrigatória {e} não encontrada no JSON.")

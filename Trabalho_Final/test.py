@@ -6,6 +6,13 @@ import math
 import itertools
 import time
 
+# Tenta importar tabulate para tabelas bonitas, senão usa pandas padrão
+try:
+    from tabulate import tabulate
+    HAS_TABULATE = True
+except ImportError:
+    HAS_TABULATE = False
+
 # Script principal para montar e resolver o modelo de alocação de tarefas.
 # Este arquivo monta um modelo MILP (pulp) a partir do JSON processado
 # por `preprocessamento.carregar_dados(...)` e aplica as restrições
@@ -30,11 +37,14 @@ total_slots = data["dias"]*24*(60//duracao_slot) # número total de slots
 disponibilidade_tarefas = data.get("disponibilidade_tarefas_binaria") # TA_{j,t}
 alpha = data.get("alpha", 0) # Valor padrão 0 se não estiver definido
 tarefas_bebe = [j for j, task_data in data["tarefas"].items() if task_data.get("tipo") == "bebe"]
-duracao_tarefas = {j: data["tarefas"][j]["duracao"]//duracao_slot for j in tarefas} # d_j (duração em slots)
+duracao_tarefas = {
+    j: math.ceil(data["tarefas"][j]["duracao"] / duracao_slot) 
+    for j in tarefas
+} # d_j (duração em slots)
 ocorrencias = {j: range(data["tarefas"][j]["ocorrencias"]) for j in tarefas}
 disponibilidade_pessoas = data["disponibilidade_pessoas_binaria"]
 capacidade = data["aptidao"] # c_{i,j}
-dependencias = data.get("dependecias", {}) # dependências entre tarefas
+dependencias =  data["dependencias"] # dependências entre tarefas
 
 limite_carga_horas = data.get("limite_carga_horas", {})
 if duracao_slot > 0:
@@ -149,6 +159,7 @@ for j in tarefas:
 for j1_id in dependencias:
     j2_id = dependencias[j1_id]["proxima_tarefa"]
     W = math.ceil(dependencias[j1_id]["janela_de_espera"] / duracao_slot)
+    print(f"Aplicando precedência: {j1_id} -> {j2_id} com janela {W} slots.")
 
     for o in ocorrencias[j1_id]:
         for t2 in range(total_slots):
@@ -188,7 +199,7 @@ if "periodicidade" in data:
                     # então um início em t1 não é válido (eliminação de inicios inválidos).
                     model += pulp.lpSum(x[i][j][o][t1] for i in pessoas) == 0
 
-# 4.8 e 4.9 OTIMIZADOS: Limites e Balanceamento
+# 4.8 e 4.9 : Limites e Balanceamento
 
 # 1. Pré-cálculo das Expressões de Carga
 # Isso cria a expressão linear da carga total (em slots) para cada pessoa UMA ÚNICA VEZ.
@@ -228,7 +239,7 @@ if limite_carga and alpha > 0:
             pct_p1 = expressao_carga_pessoa[p1] / L1
             pct_p2 = expressao_carga_pessoa[p2] / L2
             
-            # Para forçar Delta >= |pct_p1 - pct_p2|, adicionamos duas restrições lineares:
+            # Para forçar Delta >= |pc (norma infinita)t_p1 - pct_p2|, adicionamos duas restrições lineares:
             
             # 1. (P1 - P2) <= Delta
             model += pct_p1 - pct_p2 <= delta_balanceamento, f"Balanceamento_{p1}_{p2}_pos"
@@ -239,11 +250,15 @@ if limite_carga and alpha > 0:
 
 # ==============================
 # 5. Resolver modelo e mostrar solução
-# ==============================
-
-# Usa um cronômetro de alta resolução para medir o tempo gasto pelo solver.
+# ==================o pelo solver.
 start_time = time.perf_counter()
-model.solve(pulp.PULP_CBC_CMD(msg=False))
+
+solver = pulp.getSolver('HiGHS', timeLimit=300, msg=True)
+
+#solver = pulp.getSolver('HiGHS', timeLimit=300, gapRel=0.05, msg=True)
+
+model.solve(solver)
+#model.solve(pulp.PULP_CBC_CMD(msg=False))
 end_time = time.perf_counter()
 elapsed_seconds = end_time - start_time
 
@@ -252,16 +267,93 @@ status_string = pulp.LpStatus[status_code]
 print(f"Status do Modelo: {status_string}")
 print(f"Tempo de resolução (s): {elapsed_seconds:.3f}")
 
-if status_string != "Optimal":
+""" if status_string != "Optimal":
     print("\nO modelo NÃO ENCONTROU uma solução ótima. O problema é INVIÁVEL (Infeasible).")
 else:
+    print(f"Valor da Função Objetivo: {pulp.value(model.objective):.2f}") """
+
+if status_string != "Optimal" and status_string != "Feasible": # HiGHS pode retornar Feasible com Gap
+    print("\nO modelo NÃO ENCONTROU uma solução viável.")
+else:
     print(f"Valor da Função Objetivo: {pulp.value(model.objective):.2f}")
+
 
 # ==============================
 # 6. Exportar solução em JSON
 # ==============================
 
-if status_string == "Optimal":
+if status_string == "Optimal" or status_string == "Feasible":
+    solution = []
+    for i in pessoas:
+        for j in tarefas:
+            for o in ocorrencias[j]:
+                for t in range(total_slots):
+                    if pulp.value(x[i][j][o][t]) > 0.99:
+                        # Cálculos de tempo
+                        slots_por_dia = (24 * 60) // duracao_slot
+                        inicio_slot = t
+                        fim_slot = t + duracao_tarefas[j]
+
+                        dia_inicio = (inicio_slot // slots_por_dia) + 1
+                        slot_no_dia_inicio = inicio_slot % slots_por_dia
+                        minutos_inicio = slot_no_dia_inicio * duracao_slot
+                        hora_inicio = f"{minutos_inicio // 60:02d}:{minutos_inicio % 60:02d}"
+
+                        dia_fim = (fim_slot // slots_por_dia) + 1
+                        slot_no_dia_fim = fim_slot % slots_por_dia
+                        minutos_fim = slot_no_dia_fim * duracao_slot
+                        hora_fim = f"{minutos_fim // 60:02d}:{minutos_fim % 60:02d}"
+
+                        solution.append({
+                            "dia_inicio": dia_inicio,
+                            "hora_inicio": hora_inicio,
+                            "hora_fim": hora_fim,
+                            "pessoa": i,
+                            "tarefa": j,
+                            "ocorrencia": o,
+                            "inicio_slot": inicio_slot, # mantido para ordenação
+                            "fim_slot": fim_slot
+                        })
+
+    # Ordena por tempo global
+    solution = sorted(solution, key=lambda x: x["inicio_slot"])
+    
+    # Cria DataFrame
+    df = pd.DataFrame(solution)
+
+    # ---------------------------------------------------------
+    # IMPRESSÃO TABULAR NO TERMINAL (SEPARADA POR DIA)
+    # ---------------------------------------------------------
+    colunas_visuais = ['hora_inicio', 'hora_fim', 'pessoa', 'tarefa', 'ocorrencia']
+    
+    print("\n" + "="*50)
+    print("           CRONOGRAMA DETALHADO")
+    print("="*50)
+
+    dias_unicos = sorted(df['dia_inicio'].unique())
+
+    for dia in dias_unicos:
+        print(f"\n>>> DIA {dia}")
+        df_dia = df[df['dia_inicio'] == dia][colunas_visuais]
+        
+        if HAS_TABULATE:
+            # Opções de tablefmt: 'psql', 'grid', 'simple', 'github'
+            print(tabulate(df_dia, headers='keys', tablefmt='psql', showindex=False))
+        else:
+            print(df_dia.to_string(index=False))
+
+    # ---------------------------------------------------------
+    # EXPORTAÇÃO CSV
+    # ---------------------------------------------------------
+    now = pd.Timestamp.now().strftime("%Y%m%d_%H%M%S")
+    file = f"solucao_cuidados_{now}_alpha_{alpha}.csv"
+    # df.to_csv(file, index=False, encoding="utf-8")
+    # print(f"\nSolução salva em {file}.")
+
+else:
+    print("\nNenhuma solução viável foi encontrada para exportar.")
+
+'''if status_string == "Optimal":
     solution = []
     for i in pessoas:
         for j in tarefas:
@@ -305,10 +397,11 @@ if status_string == "Optimal":
     # Cria DataFrame
     df = pd.DataFrame(solution)
     now = pd.Timestamp.now().strftime("%Y%m%d_%H%M%S")
-    file = f"solucao_cuidados_{now}.csv"
+    file = f"solucao_cuidados_{now}_alpha_{alpha}.csv"
     # Salva em CSV
-    df.to_csv(file, index=False, encoding="utf-8")
+#    df.to_csv(file, index=False, encoding="utf-8")
     print()
     print(f"Solução salva em {file}.")
 else:
-    print("\nNenhuma solução viável foi encontrada para exportar.")
+    print("\nNenhuma solução viável foi encontrada para exportar.")'''
+
