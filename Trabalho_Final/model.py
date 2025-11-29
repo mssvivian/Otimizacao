@@ -53,7 +53,7 @@ else:
 # 2. Criação do modelo
 # ==============================
 
-print ("Alpha utilizado: ", alpha )
+print ("Alpha (α) utilizado: ", alpha )
 
 model = pulp.LpProblem("x_Cuidados_Bebe", pulp.LpMinimize)
 
@@ -133,14 +133,27 @@ for t in range(total_slots):
                     expr.append(x[i][j][o][t_start])
     model += pulp.lpSum(expr) <= 1
 
-
-# 4.4 Respeitar disponibilidade das pessoas
-# OBS: disponibilidade_pessoas[i][t] == 0 significa que a pessoa i não está disponível para iniciar tarefa no slot t
+# 4.4 Respeitar disponibilidade das pessoas (Considerando a duração completa)
 for i in pessoas:
     for j in tarefas:
+        duracao_j = duracao_tarefas[j] 
         for o in ocorrencias[j]:
             for t in range(total_slots):
-                if disponibilidade_pessoas[i][t] == 0:
+                # Fronteira do Tempo:
+                # Verifica se a tarefa cabe n total de slots se começar neste slot t.
+                # Se t + duração ultrapassar o total de slots, é impossível iniciar aqui.
+                if t + duracao_j > total_slots:
+                    model += x[i][j][o][t] == 0
+                    continue # Pula para o próximo t, pois este já é inválido
+                
+                # Disponibilidade na Janela:
+                # Cria uma "fatia" da lista de disponibilidade que cobre 
+                # do momento t até o momento t + duracao_j.
+                janela_disponibilidade = disponibilidade_pessoas[i][t : t + duracao_j]
+                
+                # Se houver algum '0' (indisponível) dentro dessa janela necessária, 
+                # a pessoa não pode aceitar a tarefa.
+                if 0 in janela_disponibilidade:
                     model += x[i][j][o][t] == 0
 
 # 4.5 Respeitar horários das Tarefas
@@ -154,11 +167,11 @@ for j in tarefas:
                         model += x[i][j][o][t] == 0
 
 # 4.6 Precedência entre tarefas
-print("tamanho dependencias:", len(dependencias))
+#print("tamanho dependencias:", len(dependencias))
 for j1_id in dependencias:
     j2_id = dependencias[j1_id]["proxima_tarefa"]
     W = math.ceil(dependencias[j1_id]["janela_de_espera"] / duracao_slot)
-    print(f"Aplicando precedência: {j1_id} -> {j2_id} com janela {W} slots.")
+    #print(f"Aplicando precedência: {j1_id} -> {j2_id} com janela {W} slots.")
 
     for o in ocorrencias[j1_id]:
         for t2 in range(total_slots):
@@ -200,7 +213,7 @@ if "periodicidade" in data:
 
 # 4.8 e 4.9 : Limites e Balanceamento
 
-# 1. Pré-cálculo das Expressões de Carga
+# Pré-cálculo das Expressões de Carga
 # Isso cria a expressão linear da carga total (em slots) para cada pessoa.
 expressao_carga_pessoa = {}
 
@@ -213,7 +226,7 @@ for i in pessoas:
         for t in range(total_slots)
     )
 
-# 2. Aplicação da Restrição "Hard" (Limite Máximo)
+# Aplicação da Restrição "Hard" (Limite Máximo)
 # Ninguém pode ultrapassar seu teto de horas, independente do balanceamento.
 if limite_carga:
     for i in pessoas:
@@ -222,7 +235,7 @@ if limite_carga:
             # Usa a expressão pré-calculada (muito mais rápido)
             model += expressao_carga_pessoa[i] <= L_i, f"Limite_Maximo_{i}"
 
-# 3. Aplicação da Restrição "Soft" (Balanceamento Relativo / Minimax)
+# Aplicação da Restrição "Soft" (Balanceamento Relativo / Minimax)
 # Tenta igualar a % de ocupação entre as pessoas.
 if limite_carga and alpha > 0:
     # Filtra apenas pessoas com limite definido > 0
@@ -255,9 +268,10 @@ if limite_carga and alpha > 0:
 
 # Usando HiGHS como solver principal
 # Gap tolerado: 0.01 (1%) - padrão do HiGHS
-solver = pulp.getSolver('HiGHS', timeLimit=300, msg=False)
+solver = pulp.getSolver('HiGHS', timeLimit=300, msg=True)
 
 model.solve(solver)
+
 
 status_code = model.status
 status_string = pulp.LpStatus[status_code]
@@ -326,7 +340,6 @@ if status_string == "Optimal" or status_string == "Feasible":
 
     dias_unicos = sorted(df['dia_inicio'].unique())
 
-    print("dias_unicos:", dias_unicos)
     for dia in dias_unicos:
         
         print(f"\n>>> DIA {dia}")

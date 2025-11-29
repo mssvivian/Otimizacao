@@ -1,6 +1,6 @@
 import json
 
-# Constantes que NÃO dependem dos dados (dias da semana)
+# Dias da semana
 MAPA_DIAS = {
     "seg": 0, "ter": 1, "qua": 2, "qui": 3, "sex": 4, "sab": 5, "dom": 6
 }
@@ -25,7 +25,7 @@ def _processar_disponibilidade(regras_disponibilidade, total_slots, slots_por_di
     """
     (Função interna) Converte regras de disponibilidade (pessoas) em vetores binários.
     Entrada:
-      - regras_disponibilidade: dicionário com regras por pessoa (campo "availability" do JSON)
+      - regras_disponibilidade: dicionário com regras por pessoa (campo "disponibilidade_pessoas" do JSON)
       - total_slots: número total de slots no horizonte
       - slots_por_dia: número de slots por dia
       - duracao_slot: duração de cada slot em minutos
@@ -103,7 +103,7 @@ def _processar_janelas_tarefas(janelas_tarefas, dados_tarefas, total_slots, slot
                 s_min = offset + inicio_no_dia
                 s_max = offset + limite_inicio_valido
 
-                # Marca como 1 os slots de início permitidos (note: s_max é exclusivo)
+                # Marca como 1 os slots de início permitidos (s_max é exclusivo)
                 for t in range(s_min, s_max):
                     if 0 <= t < total_slots:
                         disponibilidade_tarefas[nome_tarefa][t] = 1
@@ -126,7 +126,7 @@ def carregar_dados(caminho_arquivo):
         print(f"Erro: Arquivo '{caminho_arquivo}' não é um JSON válido.")
         return None
 
-    # 2. LÊ AS CONSTANTES
+    # Lê parâmetros principais
     try:
         duracao_slot = dados['slot_duracao_min']
         total_dias = dados['dias']
@@ -140,14 +140,14 @@ def carregar_dados(caminho_arquivo):
         print(f"Erro: Chave obrigatória {e} não encontrada no JSON.")
         return None
 
-    # 3. VALIDAÇÕES
+    # Validações básicas
     if duracao_slot <= 0:
         print("Erro: 'slot_duration_min' deve ser positivo.")
         return None
         
     slots_por_dia = (24 * 60) // duracao_slot
 
-    # 4. PROCESSA DISPONIBILIDADE DAS PESSOAS
+    # Processa disponibilidade das pessoas
     vetores_pessoas = _processar_disponibilidade(
         regras_disponibilidade,
         total_slots,
@@ -156,7 +156,7 @@ def carregar_dados(caminho_arquivo):
     )
     dados["disponibilidade_pessoas_binaria"] = vetores_pessoas
 
-    # 5. PROCESSA JANELAS DAS TAREFAS 
+    # Processa janelas de tarefas
     print("Processando janelas de tarefas...")
     vetores_tarefas = _processar_janelas_tarefas(
         janelas_tarefas,

@@ -1,91 +1,92 @@
-# Otimização - Gerenciador de Tarefas para Famílias com Recém-nascidos
+ï»¿# OtimizaÃ§Ã£o - AlocaÃ§Ã£o de Tarefas DomÃ©sticas e Cuidados de RecÃ©m Nascido para uma Rede de Apoio
 
-## Descrição
+## DescriÃ§Ã£o
 
-Este projeto implementa um modelo de **Programação Linear Inteira Mista (MILP)** para otimizar a distribuição de tarefas domésticas e de cuidado com bebês entre membros da família, babás e rede de apoio.
+Este projeto implementa um modelo de **ProgramaÃ§Ã£o Linear Inteira Mista (MILP)** para otimizar a distribuiÃ§Ã£o de tarefas domÃ©sticas e de cuidado com um recÃ©m nascido entre membros da famÃ­lia, babÃ¡s e rede de apoio.
 
-A ideia central é criar uma **agenda otimizada** que:
-- Distribui tarefas respeitando disponibilidade e horários de cada pessoa
-- Considera a aptidão/capacidade de cada indivíduo para tarefas específicas
-- Respeita precedências entre tarefas (ex: banho antes de vestir)
-- Balanceia a carga de trabalho entre os membros da rede de apoio
-- Garante que tarefas do bebê não se sobrepõem (não é possível amamentar e dar banho simultaneamente)
+### MotivaÃ§Ã£o
+Formar uma famÃ­lia traz desafios logÃ­sticos imediatos para a casa. Com as mulheres precisando conciliar maternidade com o puerpÃ©rio, uma rede de apoio sÃ³lida Ã© essencial. Este trabalho propÃµe um modelo computacional para gerenciar as tarefas da casa e do bebÃª de forma otimizada.
+
+### Objetivo
+Criar uma agenda otimizada que:
+- Distribui tarefas respeitando disponibilidade e horÃ¡rios de cada pessoa
+- Considera a aptidÃ£o/capacidade de cada indivÃ­duo para tarefas especÃ­ficas
+- Respeita precedÃªncias entre tarefas 
+- Garante que tarefas do bebÃª nÃ£o se sobrepÃµem
 - Permite que tarefas da casa sejam realizadas em paralelo
+- Balanceia a carga de trabalho entre os membros da rede de apoio
 
 ## Trabalho Principal
 
-O trabalho principal encontra-se em **Trabalho_Final_Vivian.ipynb** que contém:
-- Introdução e motivação
-- Modelo matemático detalhado
-- Implementação do solver
-- Análise e visualização de resultados
+O trabalho principal estÃ¡ em `Trabalho_Final_Vivian.ipynb` e contÃ©m:
+- IntroduÃ§Ã£o e motivaÃ§Ã£o do problema
+- Modelo matemÃ¡tico detalhado com variÃ¡veis, parÃ¢metros e restriÃ§Ãµes
+- ImplementaÃ§Ã£o do solver usando PuLP + HiGHS
+- AnÃ¡lise de resultados com diferentes valores de Î± (peso de balanceamento)
+- DiscussÃ£o a respeito do trabalho
 
 ## Estrutura do Projeto
 
-\\\
+`
 Trabalho_Final/
-+-- Trabalho_Final_Vivian.ipynb                       # Notebook principal com todo o projeto
-+-- preprocessamento.py                               # Pré-processamento de dados
-+-- diagnose.py                                       # Ferramentas de diagnóstico
-+-- visualizar_agenda.py                              # Visualização das soluções
-+-- test.py                                           # Testes do solver
-+-- teste_solver.py                                   # Testes específicos do solver
-+-- input.json                                        # Entrada com dados completos
-+-- input_semanal.json                                # Entrada com dados semanais
-+-- input_semanal_1dia.json                           # Entrada com um dia
-+-- input_semanal_1dia_simplificado.json              # Entrada simplificada de um dia
-+-- soluçoes/                                         # Soluções geradas (múltiplas execuções)
-¦   +-- solucao_cuidados_*.csv                        # Arquivos de solução com timestamps
-+-- antigo/                                           # Código anterior (não mais utilizado)
-\\\
+â”œâ”€â”€ Trabalho_Final_Vivian.ipynb              # Notebook principal com tudo
+â”œâ”€â”€ model.py                                  # ImplementaÃ§Ã£o do modelo MILP
+â”œâ”€â”€ preprocessamento.py                       # PrÃ©-processamento de dados
+â”œâ”€â”€ requirements.txt                          # DependÃªncias do projeto
+â”œâ”€â”€ input_semanal_1dia.json                  # Entrada com um dia (dados que foram realmente utilizados para testar)
+â”œâ”€â”€ input_semanal.json                       # Entrada com dados semanais
+â””â”€â”€ saidas_alphas.txt                        # Resultados com diferentes alphas
+`
 
-## Modelo Matemático
 
-### Objetivo
-Minimizar: **Falta de Aptidão + a × Desbalanceamento de Carga**
+## Como Executar
 
-Onde:
-- Falta de aptidão = custo de não usar a pessoa mais capacitada
-- Desbalanceamento = máxima diferença de carga entre pessoas
-- a = peso para balancear os dois objetivos
+### OpÃ§Ã£o 1: Executar o Notebook Jupyter
+`Bash
+cd Trabalho_Final
+jupyter notebook Trabalho_Final_Vivian.ipynb
+`
 
-### Restrições Principais
-1. Cada tarefa é realizada exatamente uma vez
-2. Não há sobreposição de tarefas por pessoa
-3. Não há sobreposição de tarefas do bebê
-4. Respeito à disponibilidade de pessoas
-5. Respeito aos horários permitidos das tarefas
-6. Precedências entre tarefas
-7. Periodicidade de tarefas recorrentes
+### OpÃ§Ã£o 2: Usar apenas o modelo (sem notebook)
+`Bash
+cd Trabalho_Final
+python model.py
+`
 
 ## Requisitos
 
 - Python 3.8+
-- Bibliotecas: \ortools\, \pandas\, \
-umpy\, \json\
+- Bibliotecas principais:
+  - `pulp` - Modelagem de problemas de otimizaÃ§Ã£o
+  - `pandas` - ManipulaÃ§Ã£o de dados
+  - `numpy` - ComputaÃ§Ã£o numÃ©rica
+  - `highs` - Solver de programaÃ§Ã£o linear/inteira (automÃ¡tico com PuLP)
 
-## Como Executar
+### Instalar dependÃªncias
+`Bash
+pip install -r requirements.txt
+`
 
-\\\ash
-# Executar o notebook principal
-jupyter notebook Trabalho_Final_Vivian.ipynb
+## Formato dos Arquivos de Entrada
 
-# Ou testar o solver diretamente
-python teste_solver.py
-\\\
+Os arquivos JSON contÃªm:
+- **Pessoas**: Nome, disponibilidade (dias/horÃ¡rios), aptidÃ£o para cada tarefa, limite de carga horÃ¡ria
+- **Tarefas**: Nome, duraÃ§Ã£o (em slots), duraÃ§Ã£o de slot, ocorrÃªncias, horÃ¡rios permitidos, precedÃªncias, periodicidade
+- **ParÃ¢metros**: DuraÃ§Ã£o do slot de tempo, peso Î± de balanceamento, peso da falta de aptidÃ£o
 
-## Arquivos de Entrada
+## Formato da SaÃ­da
 
-Os arquivos JSON contêm:
-- **Pessoas**: dados de disponibilidade e aptidão
-- **Tarefas**: duração, frequência, horários permitidos, precedências
-- **Parâmetros**: tamanho de slots, peso de balanceamento (a), etc.
-
-## Saídas
-
-As soluções são salvas em \soluçoes/\ com timestamp e parâmetro a no nome do arquivo.
-O formato é CSV com alocações de cada tarefa para cada pessoa e slot de tempo.
+A soluÃ§Ã£o Ã© impressa no terminal como uma tabela com as alocaÃ§Ãµes:
+- Pessoa responsÃ¡vel
+- Tarefa realizada
+- OcorrÃªncia
+- HorÃ¡rio de inÃ­cio
+- HorÃ¡rio de fim
 
 ## Autora
 
-Vivian - UFRJ, 2025
+Vivian Souza - UFRJ, 2025
+
+## Disciplina
+
+OtimizaÃ§Ã£o - Trabalho Final

@@ -1,0 +1,361 @@
+Alpha (α) utilizado:  0
+Status do Modelo: Optimal
+Valor da Função Objetivo: 6.20
+Tempo: 1.93s
+iterações LP: 363
+
+==================================================
+           CRONOGRAMA DETALHADO
+==================================================
+
+>>> DIA 1
++---------------+------------+----------+---------------------+--------------+
+| hora_inicio   | hora_fim   | pessoa   | tarefa              |   ocorrencia |
+|---------------+------------+----------+---------------------+--------------|
+| 00:00         | 01:00      | mae      | amamentar           |            0 |
+| 00:00         | 00:30      | pai      | aspirar_casa        |            0 |
+| 00:30         | 01:00      | pai      | lavar_roupa         |            0 |
+| 01:00         | 01:30      | mae      | arrotar             |            0 |
+| 01:30         | 02:00      | mae      | estender_roupa      |            0 |
+| 02:00         | 02:30      | pai      | ninar               |            0 |
+| 02:30         | 03:00      | mae      | trocar_fralda       |            0 |
+| 03:00         | 04:00      | mae      | amamentar           |            1 |
+| 04:00         | 04:30      | pai      | arrotar             |            1 |
+| 05:00         | 05:30      | mae      | ninar               |            1 |
+| 05:30         | 06:00      | mae      | trocar_fralda       |            1 |
+| 06:00         | 07:00      | mae      | amamentar           |            2 |
+| 07:00         | 07:30      | mae      | arrotar             |            2 |
+| 07:00         | 07:30      | pai      | preparar_cafe_manha |            0 |
+| 07:30         | 08:00      | mae      | passar_roupa        |            0 |
+| 07:30         | 08:00      | pai      | lavar_louca_cafe    |            0 |
+| 07:30         | 08:00      | avo      | cortar_unha         |            0 |
+| 08:00         | 08:30      | mae      | ninar               |            2 |
+| 08:30         | 09:00      | mae      | trocar_fralda       |            2 |
+| 09:00         | 10:00      | mae      | amamentar           |            3 |
+| 10:00         | 10:30      | baba     | arrotar             |            3 |
+| 10:30         | 11:30      | avo      | preparar_almoco     |            0 |
+| 11:00         | 11:30      | baba     | ninar               |            3 |
+| 11:30         | 12:00      | baba     | trocar_fralda       |            3 |
+| 12:00         | 13:00      | mae      | amamentar           |            4 |
+| 13:00         | 13:30      | mae      | arrotar             |            4 |
+| 13:30         | 14:00      | mae      | lavar_louca_almoco  |            0 |
+| 14:00         | 14:30      | baba     | ninar               |            4 |
+| 14:30         | 15:00      | baba     | trocar_fralda       |            4 |
+| 15:00         | 16:00      | mae      | amamentar           |            5 |
+| 16:00         | 16:30      | tia      | arrotar             |            5 |
+| 16:30         | 17:00      | tio      | banho_de_sol        |            0 |
+| 17:00         | 17:30      | tio      | ninar               |            5 |
+| 17:30         | 18:00      | mae      | trocar_fralda       |            5 |
+| 18:00         | 19:00      | mae      | amamentar           |            6 |
+| 18:00         | 18:30      | pai      | tirar_lixo          |            0 |
+| 18:30         | 19:00      | pai      | lavar_banheiro      |            0 |
+| 19:00         | 19:30      | tio      | arrotar             |            6 |
+| 19:30         | 20:00      | mae      | banho               |            0 |
+| 20:00         | 20:30      | pai      | ninar               |            6 |
+| 20:30         | 21:00      | mae      | trocar_fralda       |            6 |
+| 20:30         | 21:00      | pai      | preparar_jantar     |            0 |
+| 21:00         | 22:00      | mae      | amamentar           |            7 |
+| 21:30         | 22:00      | pai      | lavar_louca_jantar  |            0 |
+| 22:00         | 22:30      | pai      | arrotar             |            7 |
+| 23:00         | 23:30      | pai      | ninar               |            7 |
+| 23:30         | 00:00      | mae      | trocar_fralda       |            7 |
++---------------+------------+----------+---------------------+--------------+
+
+Alpha (α) utilizado:  1
+Status do Modelo: Optimal
+Valor da Função Objetivo: 6.68125
+Tempo: 16.38s
+iterações LP: 598
+
+==================================================
+           CRONOGRAMA DETALHADO
+==================================================
+
+>>> DIA 1
++---------------+------------+----------+---------------------+--------------+
+| hora_inicio   | hora_fim   | pessoa   | tarefa              |   ocorrencia |
+|---------------+------------+----------+---------------------+--------------|
+| 00:30         | 01:30      | mae      | amamentar           |            0 |
+| 01:30         | 02:00      | pai      | arrotar             |            0 |
+| 02:00         | 02:30      | mae      | trocar_fralda       |            0 |
+| 02:00         | 02:30      | pai      | tirar_lixo          |            0 |
+| 02:30         | 03:00      | pai      | ninar               |            0 |
+| 03:30         | 04:30      | mae      | amamentar           |            1 |
+| 04:30         | 05:00      | pai      | arrotar             |            1 |
+| 05:00         | 05:30      | mae      | trocar_fralda       |            1 |
+| 05:30         | 06:00      | pai      | ninar               |            1 |
+| 06:00         | 06:30      | mae      | preparar_cafe_manha |            0 |
+| 06:30         | 07:30      | mae      | amamentar           |            2 |
+| 06:30         | 07:00      | pai      | lavar_banheiro      |            0 |
+| 07:00         | 07:30      | pai      | lavar_louca_cafe    |            0 |
+| 07:30         | 08:00      | avo      | arrotar             |            2 |
+| 08:00         | 08:30      | mae      | trocar_fralda       |            2 |
+| 08:30         | 09:00      | avo      | ninar               |            2 |
+| 09:00         | 09:30      | avo      | banho_de_sol        |            0 |
+| 09:30         | 10:30      | mae      | amamentar           |            3 |
+| 09:30         | 10:30      | avo      | preparar_almoco     |            0 |
+| 10:30         | 11:00      | baba     | arrotar             |            3 |
+| 11:00         | 11:30      | baba     | trocar_fralda       |            3 |
+| 11:30         | 12:00      | baba     | ninar               |            3 |
+| 12:00         | 12:30      | avo      | cortar_unha         |            0 |
+| 12:30         | 13:30      | mae      | amamentar           |            4 |
+| 13:30         | 14:00      | baba     | arrotar             |            4 |
+| 14:00         | 14:30      | baba     | trocar_fralda       |            4 |
+| 14:30         | 15:00      | baba     | ninar               |            4 |
+| 15:00         | 15:30      | tia      | banho               |            0 |
+| 15:30         | 16:30      | mae      | amamentar           |            5 |
+| 15:30         | 16:00      | tia      | lavar_louca_almoco  |            0 |
+| 16:30         | 17:00      | tia      | arrotar             |            5 |
+| 17:00         | 17:30      | mae      | trocar_fralda       |            5 |
+| 17:30         | 18:00      | mae      | passar_roupa        |            0 |
+| 17:30         | 18:00      | tio      | ninar               |            5 |
+| 18:30         | 19:30      | mae      | amamentar           |            6 |
+| 18:30         | 19:00      | pai      | preparar_jantar     |            0 |
+| 19:00         | 19:30      | tio      | lavar_louca_jantar  |            0 |
+| 19:30         | 20:00      | tio      | arrotar             |            6 |
+| 20:00         | 20:30      | mae      | trocar_fralda       |            6 |
+| 20:00         | 20:30      | pai      | aspirar_casa        |            0 |
+| 20:30         | 21:00      | mae      | lavar_roupa         |            0 |
+| 20:30         | 21:00      | tio      | ninar               |            6 |
+| 21:00         | 21:30      | pai      | estender_roupa      |            0 |
+| 21:30         | 22:30      | mae      | amamentar           |            7 |
+| 22:30         | 23:00      | pai      | arrotar             |            7 |
+| 23:00         | 23:30      | mae      | trocar_fralda       |            7 |
+| 23:30         | 00:00      | pai      | ninar               |            7 |
++---------------+------------+----------+---------------------+--------------+
+
+Alpha (α) utilizado:  10
+Status do Modelo: Optimal
+Valor da Função Objetivo: 9.775
+Tempo: 22.1s
+iterações LP: 7854
+
+>>> DIA 1
++---------------+------------+----------+---------------------+--------------+
+| hora_inicio   | hora_fim   | pessoa   | tarefa              |   ocorrencia |
+|---------------+------------+----------+---------------------+--------------|
+| 00:30         | 01:30      | mae      | amamentar           |            0 |
+| 00:30         | 01:00      | pai      | lavar_roupa         |            0 |
+| 01:00         | 01:30      | pai      | estender_roupa      |            0 |
+| 01:30         | 02:00      | pai      | arrotar             |            0 |
+| 02:00         | 02:30      | mae      | passar_roupa        |            0 |
+| 02:00         | 02:30      | pai      | ninar               |            0 |
+| 02:30         | 03:00      | mae      | trocar_fralda       |            0 |
+| 03:30         | 04:30      | mae      | amamentar           |            1 |
+| 04:30         | 05:00      | pai      | arrotar             |            1 |
+| 05:00         | 05:30      | pai      | ninar               |            1 |
+| 05:30         | 06:00      | mae      | trocar_fralda       |            1 |
+| 06:30         | 07:30      | mae      | amamentar           |            2 |
+| 07:00         | 07:30      | avo      | preparar_cafe_manha |            0 |
+| 07:30         | 08:00      | pai      | lavar_louca_cafe    |            0 |
+| 07:30         | 08:00      | avo      | arrotar             |            2 |
+| 08:00         | 08:30      | avo      | ninar               |            2 |
+| 08:30         | 09:00      | avo      | trocar_fralda       |            2 |
+| 09:30         | 10:30      | mae      | amamentar           |            3 |
+| 09:30         | 10:30      | avo      | preparar_almoco     |            0 |
+| 10:30         | 11:00      | baba     | arrotar             |            3 |
+| 11:00         | 11:30      | baba     | ninar               |            3 |
+| 11:30         | 12:00      | baba     | trocar_fralda       |            3 |
+| 12:00         | 12:30      | baba     | cortar_unha         |            0 |
+| 12:30         | 13:30      | mae      | amamentar           |            4 |
+| 13:30         | 14:00      | baba     | arrotar             |            4 |
+| 14:00         | 14:30      | baba     | ninar               |            4 |
+| 14:30         | 15:00      | baba     | trocar_fralda       |            4 |
+| 15:00         | 15:30      | tia      | banho_de_sol        |            0 |
+| 15:30         | 16:30      | mae      | amamentar           |            5 |
+| 15:30         | 16:00      | tia      | lavar_louca_almoco  |            0 |
+| 16:00         | 16:30      | tia      | aspirar_casa        |            0 |
+| 16:30         | 17:00      | tia      | arrotar             |            5 |
+| 17:00         | 17:30      | pai      | preparar_jantar     |            0 |
+| 17:00         | 17:30      | tio      | ninar               |            5 |
+| 17:30         | 18:00      | mae      | trocar_fralda       |            5 |
+| 17:30         | 18:00      | tio      | lavar_banheiro      |            0 |
+| 18:00         | 18:30      | tio      | banho               |            0 |
+| 18:30         | 19:30      | mae      | amamentar           |            6 |
+| 18:30         | 19:00      | pai      | tirar_lixo          |            0 |
+| 18:30         | 19:00      | tio      | lavar_louca_jantar  |            0 |
+| 19:30         | 20:00      | tio      | arrotar             |            6 |
+| 20:00         | 20:30      | tio      | ninar               |            6 |
+| 20:30         | 21:00      | mae      | trocar_fralda       |            6 |
+| 21:30         | 22:30      | mae      | amamentar           |            7 |
+| 22:30         | 23:00      | pai      | arrotar             |            7 |
+| 23:00         | 23:30      | pai      | ninar               |            7 |
+| 23:30         | 00:00      | mae      | trocar_fralda       |            7 |
++---------------+------------+----------+---------------------+--------------+
+
+Alpha (α) utilizado:  100
+Status do Modelo: Optimal
+Valor da Função Objetivo: 35.65 - 35.6473060472
+Tempo: 20.11
+iterações LP: 1759
+
+>>> DIA 1
++---------------+------------+----------+---------------------+--------------+
+| hora_inicio   | hora_fim   | pessoa   | tarefa              |   ocorrencia |
+|---------------+------------+----------+---------------------+--------------|
+| 00:30         | 01:30      | mae      | amamentar           |            0 |
+| 00:30         | 01:00      | pai      | tirar_lixo          |            0 |
+| 01:30         | 02:00      | pai      | arrotar             |            0 |
+| 02:00         | 02:30      | pai      | ninar               |            0 |
+| 02:30         | 03:00      | mae      | trocar_fralda       |            0 |
+| 03:30         | 04:30      | mae      | amamentar           |            1 |
+| 03:30         | 04:00      | pai      | aspirar_casa        |            0 |
+| 04:30         | 05:00      | pai      | arrotar             |            1 |
+| 05:00         | 05:30      | pai      | ninar               |            1 |
+| 05:30         | 06:00      | mae      | trocar_fralda       |            1 |
+| 05:30         | 06:00      | pai      | preparar_cafe_manha |            0 |
+| 06:30         | 07:30      | mae      | amamentar           |            2 |
+| 06:30         | 07:00      | pai      | lavar_louca_cafe    |            0 |
+| 07:30         | 08:00      | avo      | arrotar             |            2 |
+| 08:00         | 08:30      | avo      | ninar               |            2 |
+| 08:30         | 09:00      | avo      | trocar_fralda       |            2 |
+| 09:00         | 09:30      | avo      | cortar_unha         |            0 |
+| 09:30         | 10:30      | mae      | amamentar           |            3 |
+| 10:30         | 11:00      | baba     | arrotar             |            3 |
+| 11:00         | 11:30      | baba     | ninar               |            3 |
+| 11:30         | 12:30      | avo      | preparar_almoco     |            0 |
+| 11:30         | 12:00      | baba     | trocar_fralda       |            3 |
+| 12:00         | 12:30      | baba     | banho               |            0 |
+| 12:30         | 13:30      | mae      | amamentar           |            4 |
+| 13:30         | 14:00      | baba     | arrotar             |            4 |
+| 14:00         | 14:30      | baba     | ninar               |            4 |
+| 14:30         | 15:00      | baba     | trocar_fralda       |            4 |
+| 15:00         | 15:30      | tia      | banho_de_sol        |            0 |
+| 15:30         | 16:30      | mae      | amamentar           |            5 |
+| 15:30         | 16:00      | tio      | lavar_louca_almoco  |            0 |
+| 15:30         | 16:00      | tia      | lavar_roupa         |            0 |
+| 16:00         | 16:30      | tia      | passar_roupa        |            0 |
+| 16:30         | 17:00      | tio      | arrotar             |            5 |
+| 16:30         | 17:00      | tia      | estender_roupa      |            0 |
+| 17:00         | 17:30      | tio      | ninar               |            5 |
+| 17:30         | 18:00      | mae      | trocar_fralda       |            5 |
+| 17:30         | 18:00      | pai      | preparar_jantar     |            0 |
+| 18:30         | 19:30      | mae      | amamentar           |            6 |
+| 19:00         | 19:30      | pai      | lavar_banheiro      |            0 |
+| 19:30         | 20:00      | tio      | arrotar             |            6 |
+| 20:00         | 20:30      | tio      | ninar               |            6 |
+| 20:30         | 21:00      | mae      | trocar_fralda       |            6 |
+| 20:30         | 21:00      | tio      | lavar_louca_jantar  |            0 |
+| 21:30         | 22:30      | mae      | amamentar           |            7 |
+| 22:30         | 23:00      | pai      | arrotar             |            7 |
+| 23:00         | 23:30      | mae      | ninar               |            7 |
+| 23:30         | 00:00      | mae      | trocar_fralda       |            7 |
++---------------+------------+----------+---------------------+--------------+
+
+Alpha (α) utilizado:  1000
+Status do Modelo: Optimal
+Valor da Função Objetivo: 294.4
+Tempo: 20.13s
+iterações LP: 3028
+
+>>> DIA 1
++---------------+------------+----------+---------------------+--------------+
+| hora_inicio   | hora_fim   | pessoa   | tarefa              |   ocorrencia |
+|---------------+------------+----------+---------------------+--------------|
+| 00:00         | 01:00      | mae      | amamentar           |            0 |
+| 01:00         | 01:30      | pai      | arrotar             |            0 |
+| 02:00         | 02:30      | pai      | ninar               |            0 |
+| 02:30         | 03:00      | mae      | trocar_fralda       |            0 |
+| 03:00         | 04:00      | mae      | amamentar           |            1 |
+| 04:00         | 04:30      | pai      | arrotar             |            1 |
+| 05:00         | 05:30      | pai      | ninar               |            1 |
+| 05:30         | 06:00      | mae      | trocar_fralda       |            1 |
+| 05:30         | 06:00      | pai      | preparar_cafe_manha |            0 |
+| 06:00         | 07:00      | mae      | amamentar           |            2 |
+| 06:30         | 07:00      | pai      | lavar_louca_cafe    |            0 |
+| 07:00         | 07:30      | avo      | arrotar             |            2 |
+| 07:30         | 08:00      | pai      | lavar_banheiro      |            0 |
+| 08:00         | 08:30      | avo      | ninar               |            2 |
+| 08:30         | 09:00      | avo      | trocar_fralda       |            2 |
+| 09:00         | 10:00      | mae      | amamentar           |            3 |
+| 10:00         | 10:30      | baba     | arrotar             |            3 |
+| 10:30         | 11:30      | avo      | preparar_almoco     |            0 |
+| 10:30         | 11:00      | baba     | banho               |            0 |
+| 11:00         | 11:30      | baba     | ninar               |            3 |
+| 11:30         | 12:00      | baba     | trocar_fralda       |            3 |
+| 12:00         | 13:00      | mae      | amamentar           |            4 |
+| 13:00         | 13:30      | baba     | arrotar             |            4 |
+| 13:30         | 14:00      | avo      | cortar_unha         |            0 |
+| 14:00         | 14:30      | baba     | ninar               |            4 |
+| 14:30         | 15:00      | baba     | trocar_fralda       |            4 |
+| 15:00         | 16:00      | mae      | amamentar           |            5 |
+| 15:00         | 15:30      | tia      | passar_roupa        |            0 |
+| 15:30         | 16:00      | tia      | lavar_roupa         |            0 |
+| 16:00         | 16:30      | tio      | arrotar             |            5 |
+| 16:00         | 16:30      | tia      | lavar_louca_almoco  |            0 |
+| 16:30         | 17:00      | mae      | estender_roupa      |            0 |
+| 16:30         | 17:00      | tio      | banho_de_sol        |            0 |
+| 16:30         | 17:00      | tia      | aspirar_casa        |            0 |
+| 17:00         | 17:30      | tio      | ninar               |            5 |
+| 17:30         | 18:00      | mae      | trocar_fralda       |            5 |
+| 17:30         | 18:00      | pai      | preparar_jantar     |            0 |
+| 18:00         | 19:00      | mae      | amamentar           |            6 |
+| 19:00         | 19:30      | tio      | arrotar             |            6 |
+| 20:00         | 20:30      | tio      | ninar               |            6 |
+| 20:30         | 21:00      | mae      | trocar_fralda       |            6 |
+| 20:30         | 21:00      | tio      | lavar_louca_jantar  |            0 |
+| 21:00         | 22:00      | mae      | amamentar           |            7 |
+| 22:00         | 22:30      | pai      | arrotar             |            7 |
+| 23:00         | 23:30      | pai      | ninar               |            7 |
+| 23:30         | 00:00      | mae      | trocar_fralda       |            7 |
+| 23:30         | 00:00      | pai      | tirar_lixo          |            0 |
++---------------+------------+----------+---------------------+--------------+
+
+Alpha (α) utilizado:  1000000
+Status do Modelo: Optimal
+Valor da Função Objetivo: 287506.709446
+Tempo: 300.01s
+iterações LP: 245600
+
+>>> DIA 1
++---------------+------------+----------+---------------------+--------------+
+| hora_inicio   | hora_fim   | pessoa   | tarefa              |   ocorrencia |
+|---------------+------------+----------+---------------------+--------------|
+| 00:00         | 01:00      | mae      | amamentar           |            0 |
+| 00:00         | 00:30      | pai      | lavar_banheiro      |            0 |
+| 00:30         | 01:00      | pai      | aspirar_casa        |            0 |
+| 01:00         | 01:30      | pai      | arrotar             |            0 |
+| 02:00         | 02:30      | mae      | trocar_fralda       |            0 |
+| 02:30         | 03:00      | mae      | ninar               |            0 |
+| 03:00         | 04:00      | mae      | amamentar           |            1 |
+| 04:00         | 04:30      | pai      | arrotar             |            1 |
+| 05:00         | 05:30      | mae      | trocar_fralda       |            1 |
+| 05:30         | 06:00      | mae      | ninar               |            1 |
+| 06:00         | 07:00      | mae      | amamentar           |            2 |
+| 06:00         | 06:30      | pai      | tirar_lixo          |            0 |
+| 07:00         | 07:30      | pai      | preparar_cafe_manha |            0 |
+| 07:00         | 07:30      | avo      | arrotar             |            2 |
+| 07:30         | 08:00      | pai      | lavar_louca_cafe    |            0 |
+| 07:30         | 08:00      | avo      | cortar_unha         |            0 |
+| 08:00         | 08:30      | avo      | trocar_fralda       |            2 |
+| 08:30         | 09:00      | avo      | ninar               |            2 |
+| 09:00         | 10:00      | mae      | amamentar           |            3 |
+| 10:00         | 10:30      | baba     | arrotar             |            3 |
+| 11:00         | 11:30      | baba     | trocar_fralda       |            3 |
+| 11:30         | 12:30      | avo      | preparar_almoco     |            0 |
+| 11:30         | 12:00      | baba     | ninar               |            3 |
+| 12:00         | 13:00      | baba     | amamentar           |            4 |
+| 13:00         | 13:30      | baba     | arrotar             |            4 |
+| 14:00         | 14:30      | baba     | trocar_fralda       |            4 |
+| 14:30         | 15:00      | baba     | ninar               |            4 |
+| 15:00         | 16:00      | mae      | amamentar           |            5 |
+| 15:00         | 15:30      | tia      | lavar_roupa         |            0 |
+| 15:30         | 16:00      | tia      | estender_roupa      |            0 |
+| 16:00         | 16:30      | tio      | lavar_louca_almoco  |            0 |
+| 16:00         | 16:30      | tia      | arrotar             |            5 |
+| 16:30         | 17:00      | tio      | banho_de_sol        |            0 |
+| 16:30         | 17:00      | tia      | passar_roupa        |            0 |
+| 17:00         | 17:30      | mae      | trocar_fralda       |            5 |
+| 17:30         | 18:00      | pai      | preparar_jantar     |            0 |
+| 17:30         | 18:00      | tio      | ninar               |            5 |
+| 18:00         | 19:00      | mae      | amamentar           |            6 |
+| 19:00         | 19:30      | tio      | arrotar             |            6 |
+| 19:30         | 20:00      | tio      | banho               |            0 |
+| 20:00         | 20:30      | mae      | trocar_fralda       |            6 |
+| 20:30         | 21:00      | tio      | ninar               |            6 |
+| 21:00         | 22:00      | mae      | amamentar           |            7 |
+| 22:00         | 22:30      | pai      | arrotar             |            7 |
+| 22:30         | 23:00      | pai      | lavar_louca_jantar  |            0 |
+| 23:00         | 23:30      | pai      | trocar_fralda       |            7 |
+| 23:30         | 00:00      | mae      | ninar               |            7 |
++---------------+------------+----------+---------------------+--------------+
