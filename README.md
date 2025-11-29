@@ -25,19 +25,15 @@ O trabalho principal está em `Trabalho_Final_Vivian.ipynb` e contém:
 - Análise de resultados com diferentes valores de α (peso de balanceamento)
 - Discussão a respeito do trabalho
 
-## Estrutura do Projeto
+## Estrutura de Arquivos
 
-`
-Trabalho_Final/
-├── Trabalho_Final_Vivian.ipynb              # Notebook principal com tudo
-├── model.py                                  # Implementação do modelo MILP
-├── preprocessamento.py                       # Pré-processamento de dados
-├── requirements.txt                          # Dependências do projeto
-├── input_semanal_1dia.json                  # Entrada com um dia (dados que foram realmente utilizados para testar)
-├── input_semanal.json                       # Entrada com dados semanais
-└── saidas_alphas.txt                        # Resultados com diferentes alphas
-`
-
+- **Trabalho_Final_Vivian.ipynb**: Notebook principal contendo a execução completa e análises.
+- **model.py**: Código fonte com a implementação do modelo MILP (PuLP).
+- **preprocessamento.py**: Scripts para limpeza e preparação dos dados brutos.
+- **input_semanal.json**: Dataset completo com a rotina semanal (modelo não convergiu a tempo).
+- **input_semanal_1dia.json**: Dataset utilizado para testar a modelagem.
+- **saidas_alphas.txt**: Log de resultados variando os parâmetros alpha.
+- **requirements.txt**: Lista de bibliotecas necessárias para rodar o projeto.
 
 ## Como Executar
 
