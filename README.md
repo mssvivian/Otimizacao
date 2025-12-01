@@ -38,13 +38,13 @@ O trabalho principal está em `Trabalho_Final_Vivian.ipynb` e contém:
 ## Como Executar
 
 ### Opção 1: Executar o Notebook Jupyter
-`Bash
+`
 cd Trabalho_Final
 jupyter notebook Trabalho_Final_Vivian.ipynb
 `
 
 ### Opção 2: Usar apenas o modelo (sem notebook)
-`Bash
+`
 cd Trabalho_Final
 python model.py
 `
@@ -59,7 +59,7 @@ python model.py
   - `highs` - Solver de programação linear/inteira (automático com PuLP)
 
 ### Instalar dependências
-`Bash
+`
 pip install -r requirements.txt
 `
 
